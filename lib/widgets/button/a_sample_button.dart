@@ -1,7 +1,7 @@
 part of '../../flutter_artis_ui_kit.dart';
 
-class SampleButton extends StatelessWidget {
-  const SampleButton({super.key});
+class ASampleButton extends StatelessWidget {
+  const ASampleButton({super.key});
 
   @override
   Widget build(BuildContext context) {
