@@ -1,3 +1,4 @@
-library flutter_artis_ui_kit;
+import 'package:flutter/material.dart';
 
-export 'widgets/sample_text.dart';
+part 'widgets/sample_text.dart';
+part 'widgets/sample_button.dart';
