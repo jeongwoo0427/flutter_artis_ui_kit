@@ -1,0 +1,11 @@
+name: flutter_artis_ui_kit
+description: Artis UI Kit for Flutter
+version: 0.0.1
+publish_to: "none" # pub.dev에 배포 안할 때
+
+environment:
+  sdk: ^3.8.1
+
+dependencies:
+  flutter:
+    sdk: flutter
