@@ -1,4 +1,4 @@
-part of '../flutter_artis_ui_kit.dart';
+part of '../../flutter_artis_ui_kit.dart';
 
 class SampleButton extends StatelessWidget {
   const SampleButton({super.key});
