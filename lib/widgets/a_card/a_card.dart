@@ -43,7 +43,7 @@ class _ACardState extends State<ACard> {
   void _handleTapUp(TapUpDetails details) {
     if (!_enabled) return;
     _releaseTimer?.cancel();
-    _releaseTimer = Timer(const Duration(milliseconds: 100), () {
+    _releaseTimer = Timer(const Duration(milliseconds: 150), () {
       if (mounted) {
         setState(() => _pressed = false);
       }
