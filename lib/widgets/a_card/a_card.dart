@@ -18,7 +18,7 @@ class ACard extends StatefulWidget {
     required this.child,
     this.onPressed,
     this.onLongPress,
-    this.elevation = 1,
+    this.elevation = 0,
     this.color,
     this.borderRadius,
     this.padding,
@@ -65,7 +65,7 @@ class _ACardState extends State<ACard> {
 
     final body = DecoratedBox(
       decoration: BoxDecoration(
-        color: widget.color ?? theme.cardColor,
+        color: widget.color ?? theme.colorScheme.surface,
         borderRadius: borderRadius,
         border: widget.border,
         boxShadow: widget.elevation > 0
