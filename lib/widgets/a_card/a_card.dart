@@ -1,4 +1,4 @@
-part of '../flutter_artis_ui_kit.dart';
+part of '../../flutter_artis_ui_kit.dart';
 
 class ACard extends StatefulWidget {
   final Widget child;
