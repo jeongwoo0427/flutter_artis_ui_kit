@@ -1,6 +1,6 @@
 part of '../../../flutter_artis_ui_kit.dart';
 
-class AEllipseButton extends StatelessWidget {
+class AButton extends StatelessWidget {
   final Widget child;
   final VoidCallback? onPressed;
   final VoidCallback? onLongPress;
@@ -12,8 +12,11 @@ class AEllipseButton extends StatelessWidget {
   final BoxBorder? border;
   final double? textScale;
   final FontWeight? fontWeight;
+  final BorderRadius? borderRadius;
+  final bool showBorder;
+  final double? _defaultRadius; // internal default per size
 
-  const AEllipseButton({
+  const AButton({
     super.key,
     required this.child,
     this.color,
@@ -26,9 +29,11 @@ class AEllipseButton extends StatelessWidget {
     this.border,
     this.textScale,
     this.fontWeight,
-  });
+    this.borderRadius,
+    this.showBorder = false,
+  }) : _defaultRadius = 12;
 
-  const AEllipseButton.large({
+  const AButton.large({
     super.key,
     required this.child,
     this.color,
@@ -39,12 +44,16 @@ class AEllipseButton extends StatelessWidget {
     this.width,
     this.height,
     this.border,
+    this.borderRadius,
+    bool? showBorder,
   }) : padding =
            padding ?? const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
        textScale = 1.15,
-       fontWeight = FontWeight.w600;
+       fontWeight = FontWeight.w600,
+       showBorder = showBorder ?? false,
+       _defaultRadius = 12;
 
-  const AEllipseButton.tiny({
+  const AButton.tiny({
     super.key,
     required this.child,
     this.color,
@@ -55,10 +64,14 @@ class AEllipseButton extends StatelessWidget {
     this.width,
     this.height,
     this.border,
+    this.borderRadius,
+    bool? showBorder,
   }) : padding =
            padding ?? const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
        textScale = 0.9,
-       fontWeight = null;
+       fontWeight = null,
+       showBorder = showBorder ?? false,
+       _defaultRadius = 6;
 
   @override
   Widget build(BuildContext context) {
@@ -71,13 +84,21 @@ class AEllipseButton extends StatelessWidget {
       child: child,
     );
 
+    final BorderRadius effectiveRadius =
+        borderRadius ?? BorderRadius.circular(_defaultRadius ?? 12);
+
     return ACard(
-      child: Center(child: mergedChild),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [mergedChild],
+      ),
       onPressed: onPressed,
       onLongPress: onLongPress,
       elevation: elevation,
       color: color,
-      borderRadius: BorderRadius.circular(9999),
+      borderRadius: effectiveRadius,
       padding:
           padding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       width: width,
