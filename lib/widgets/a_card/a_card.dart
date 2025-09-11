@@ -87,8 +87,8 @@ class _ACardState extends State<ACard> {
     );
 
     final scaled = AnimatedScale(
-      scale: _pressed ? 0.97 : 1.0,
-      duration: const Duration(milliseconds: 90),
+      scale: _pressed ? 0.94 : 1.0,
+      duration: const Duration(milliseconds: 230),
       curve: Curves.easeOut,
       child: body,
     );
