@@ -33,6 +33,7 @@ class ACard extends StatefulWidget {
 
 class _ACardState extends State<ACard> {
   bool _pressed = false;
+  Timer? _releaseTimer;
 
   void _handleTapDown(TapDownDetails details) {
     if (!_enabled) return;
@@ -41,10 +42,16 @@ class _ACardState extends State<ACard> {
 
   void _handleTapUp(TapUpDetails details) {
     if (!_enabled) return;
-    setState(() => _pressed = false);
+    _releaseTimer?.cancel();
+    _releaseTimer = Timer(const Duration(milliseconds: 100), () {
+      if (mounted) {
+        setState(() => _pressed = false);
+      }
+    });
   }
 
   void _handleTapCancel() {
+    _releaseTimer?.cancel();
     setState(() => _pressed = false);
   }
 
