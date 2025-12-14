@@ -2,7 +2,7 @@ part of '../../flutter_artis_ui_kit.dart';
 
 enum _ButtonSize { large, normal, small }
 
-class AButton extends StatefulWidget {
+class AButton extends StatelessWidget {
   final Widget child;
   final VoidCallback? onPressed;
   final VoidCallback? onLongPressed;
@@ -12,8 +12,8 @@ class AButton extends StatefulWidget {
   final Color? filledColor;
   final Color? contentColor;
   final Color? outlineColor;
-  final Color? splashColor;
-  final double minHeight;
+  final Color? highlightColor;
+  final double height;
   final double minWidth;
   final _ButtonSize _buttonSize;
 
@@ -28,9 +28,9 @@ class AButton extends StatefulWidget {
     this.filledColor,
     this.contentColor,
     this.outlineColor,
-    this.splashColor,
-    this.minHeight = 38,
-    this.minWidth = 80,
+    this.highlightColor,
+    this.height = 38,
+    this.minWidth = 88,
   }) : _buttonSize = _ButtonSize.normal;
 
   const AButton.large({
@@ -44,8 +44,8 @@ class AButton extends StatefulWidget {
     this.filledColor,
     this.contentColor,
     this.outlineColor,
-    this.splashColor,
-    this.minHeight = 54,
+    this.highlightColor,
+    this.height = 54,
     this.minWidth = 130,
   }) : _buttonSize = _ButtonSize.large;
 
@@ -60,117 +60,65 @@ class AButton extends StatefulWidget {
     this.filledColor,
     this.contentColor,
     this.outlineColor,
-    this.splashColor,
-    this.minHeight = 28,
-    this.minWidth = 50,
+    this.highlightColor,
+    this.height = 30,
+    this.minWidth = 60,
   }) : _buttonSize = _ButtonSize.small;
-
-  @override
-  State<AButton> createState() => _AButtonState();
-}
-
-class _AButtonState extends State<AButton> {
-  bool _isPressed = false;
-
-  void _setPressed(bool value) {
-    if (_isPressed == value) return;
-    setState(() => _isPressed = value);
-  }
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final enabled = widget.onPressed != null || widget.onLongPressed != null;
 
     double fontSize = 14;
     FontWeight fontWeight = FontWeight.w500;
-    if (widget._buttonSize == _ButtonSize.large) {
+    if (_buttonSize == _ButtonSize.large) {
       fontSize = 18;
       fontWeight = FontWeight.w700;
-    } else if (widget._buttonSize == _ButtonSize.small) {
-      fontSize = 13;
+    } else if (_buttonSize == _ButtonSize.small) {
+      fontSize = 12;
       fontWeight = FontWeight.w500;
     }
 
-    final Color filledColor =
-        widget.filledColor ??
-        (widget.fullFilled ? colorScheme.primaryContainer : Colors.transparent);
+    final Color finalFilledColor = filledColor ?? (fullFilled ? colorScheme.primaryContainer : Colors.transparent);
 
-    final Color outlineColor =
-        widget.outlineColor ??
-        (widget.fullFilled ? filledColor : colorScheme.outlineVariant);
+    final bool isLightFilled = finalFilledColor.computeLuminance() > 0.5;
 
-    final Color contentColor =
-        widget.contentColor ??
-        (widget.fullFilled
-            ? colorScheme.onPrimaryContainer
-            : colorScheme.onSurface);
+    final Color autoContentColor = isLightFilled ? Colors.black.withValues(alpha: 0.7) : Colors.white;
 
-    final Color splashColor =
-        widget.splashColor ?? (widget.fullFilled ? colorScheme.onPrimaryContainer : colorScheme.onSurface);
+    final Color autoHighlightColor = isLightFilled ? Colors.black.withValues(alpha: 0.3) : Colors.white;
 
-    final Widget splashOverlay = IgnorePointer(
-      ignoring: true,
-      child: AnimatedOpacity(
-        opacity: _isPressed ? 0.3 : 0,
-        duration: Duration(milliseconds: 200),
-        curve: Curves.ease,
-        child: Container(
-          decoration: BoxDecoration(
-            color: splashColor,
-            borderRadius: widget.borderRadius,
-          ),
+    final Color finalOutlineColor = outlineColor ?? (fullFilled ? finalFilledColor : colorScheme.outlineVariant);
+
+    final Color finalContentColor = contentColor ?? (fullFilled ? autoContentColor : colorScheme.onSurface);
+
+    final Color finalHighlightColor = highlightColor ?? (fullFilled ? autoHighlightColor : colorScheme.onSurface);
+
+    return MaterialButton(
+      onPressed: onPressed,
+      child: DefaultTextStyle.merge(
+        style: TextStyle(color: finalContentColor, fontSize: fontSize, fontWeight: fontWeight),
+        child: IconTheme.merge(
+          data: IconThemeData(color: finalContentColor),
+          child: child,
         ),
       ),
-    );
-
-    final Widget button = AnimatedContainer(
-      duration: const Duration(milliseconds: 400),
-      curve: Curves.ease,
-      padding: widget.padding,
-      constraints: BoxConstraints(
-        minHeight: widget.minHeight,
-        minWidth: widget.minWidth,
-      ),
-      decoration: BoxDecoration(
-        color: filledColor,
-        borderRadius: widget.borderRadius,
-        border: BoxBorder.all(color: outlineColor, width: 1.3),
-      ),
-      child: Align(
-        alignment: Alignment.center,
-        widthFactor: 1,
-        child: DefaultTextStyle.merge(
-          style: TextStyle(
-            color: contentColor,
-            fontSize: fontSize,
-            fontWeight: fontWeight,
-          ),
-          child: IconTheme.merge(
-            data: IconThemeData(color: contentColor),
-            child: widget.child,
-          ),
-        ),
-      ),
-    );
-
-    return Semantics(
-      button: true,
-      enabled: enabled,
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTapDown: enabled ? (_) => _setPressed(true) : null,
-        onTapUp: enabled ? (_) => _setPressed(false) : null,
-        onTapCancel: enabled ? () => _setPressed(false) : null,
-        onTap: widget.onPressed,
-        onLongPress: widget.onLongPressed,
-        child: Stack(
-          children: [
-            button,
-            Positioned.fill(child: splashOverlay),
-          ],
-        ),
-      ),
+      shape: fullFilled
+          ? RoundedRectangleBorder(borderRadius: borderRadius)
+          : RoundedRectangleBorder(
+              borderRadius: borderRadius,
+              side: BorderSide(color: finalOutlineColor, width: 1),
+            ),
+      elevation: 0,
+      splashColor: Colors.transparent,
+      color: finalFilledColor,
+      highlightColor: finalHighlightColor.withValues(alpha: 0.3),
+      minWidth: minWidth,
+      padding: padding,
+      height: height,
+      hoverElevation: 0,
+      highlightElevation: 0,
+      focusElevation: 0,
+      disabledElevation: 0,
     );
   }
 }
