@@ -8,11 +8,8 @@ class AButton extends StatelessWidget {
   final VoidCallback? onLongPressed;
   final BorderRadius borderRadius;
   final EdgeInsets padding;
-  final bool fullFilled;
-  final Color? filledColor;
-  final Color? contentColor;
-  final Color? outlineColor;
-  final Color? highlightColor;
+  final bool filled;
+  final Color? color;
   final double height;
   final double minWidth;
   final _ButtonSize _buttonSize;
@@ -24,11 +21,8 @@ class AButton extends StatelessWidget {
     this.onLongPressed,
     this.borderRadius = const BorderRadius.all(Radius.circular(999)),
     this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-    this.fullFilled = false,
-    this.filledColor,
-    this.contentColor,
-    this.outlineColor,
-    this.highlightColor,
+    this.filled = false,
+    this.color,
     this.height = 38,
     this.minWidth = 88,
   }) : _buttonSize = _ButtonSize.normal;
@@ -40,11 +34,8 @@ class AButton extends StatelessWidget {
     this.onLongPressed,
     this.borderRadius = const BorderRadius.all(Radius.circular(999)),
     this.padding = const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-    this.fullFilled = false,
-    this.filledColor,
-    this.contentColor,
-    this.outlineColor,
-    this.highlightColor,
+    this.filled = false,
+    this.color,
     this.height = 54,
     this.minWidth = 130,
   }) : _buttonSize = _ButtonSize.large;
@@ -56,11 +47,8 @@ class AButton extends StatelessWidget {
     this.onLongPressed,
     this.borderRadius = const BorderRadius.all(Radius.circular(999)),
     this.padding = const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-    this.fullFilled = false,
-    this.filledColor,
-    this.contentColor,
-    this.outlineColor,
-    this.highlightColor,
+    this.filled = false,
+    this.color,
     this.height = 30,
     this.minWidth = 60,
   }) : _buttonSize = _ButtonSize.small;
@@ -79,7 +67,7 @@ class AButton extends StatelessWidget {
       fontWeight = FontWeight.w500;
     }
 
-    final Color finalFilledColor = filledColor ?? (fullFilled ? colorScheme.primaryContainer : Colors.transparent);
+    final Color finalFilledColor = filled ? color ?? colorScheme.primaryContainer : Colors.transparent;
 
     final bool isLightFilled = finalFilledColor.computeLuminance() > 0.5;
 
@@ -87,11 +75,11 @@ class AButton extends StatelessWidget {
 
     final Color autoHighlightColor = isLightFilled ? Colors.black.withValues(alpha: 0.3) : Colors.white;
 
-    final Color finalOutlineColor = outlineColor ?? (fullFilled ? finalFilledColor : colorScheme.outlineVariant);
+    final Color finalOutlineColor = filled ? finalFilledColor : color ?? colorScheme.outlineVariant;
 
-    final Color finalContentColor = contentColor ?? (fullFilled ? autoContentColor : colorScheme.onSurface);
+    final Color finalContentColor = filled ? autoContentColor : color ?? colorScheme.onSurface;
 
-    final Color finalHighlightColor = highlightColor ?? (fullFilled ? autoHighlightColor : colorScheme.onSurface);
+    final Color finalHighlightColor = filled ? autoHighlightColor : colorScheme.onSurface;
 
     return MaterialButton(
       onPressed: onPressed,
@@ -102,7 +90,7 @@ class AButton extends StatelessWidget {
           child: child,
         ),
       ),
-      shape: fullFilled
+      shape: filled
           ? RoundedRectangleBorder(borderRadius: borderRadius)
           : RoundedRectangleBorder(
               borderRadius: borderRadius,
