@@ -11,7 +11,7 @@ class ABottomNavigationBar extends StatefulWidget {
   final Function(int index) onTapIndex;
 
   ///A double that determines how far it is from the bottom
-  final double bottomMargin;
+  final double minimumBottomMargin;
 
   ///Determines how much evocation effect you want to add.
   final double elevation;
@@ -51,7 +51,7 @@ class ABottomNavigationBar extends StatefulWidget {
     required this.items,
     required this.selectedIndex,
     required this.onTapIndex,
-    this.bottomMargin = 0,
+    this.minimumBottomMargin = 16,
     this.elevation = 5,
     this.bottomPadding = 2,
     this.rightPadding = 14,
@@ -92,7 +92,8 @@ class _ABottomNavigationBarState extends State<ABottomNavigationBar>
 
     return SafeArea(
       bottom: true,
-      minimum: EdgeInsets.only(bottom: widget.bottomMargin),
+      minimum: EdgeInsets.only(bottom: widget.minimumBottomMargin),
+      maintainBottomViewPadding: true,
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.center,
