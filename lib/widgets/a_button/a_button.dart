@@ -108,23 +108,27 @@ class _AButtonState extends State<AButton> {
       ),
     );
 
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTapDown: enabled ? (_) => _setPressed(true) : null,
-      onTapUp: enabled ? (_) => _setPressed(false) : null,
-      onTapCancel: enabled ? () => _setPressed(false) : null,
-      onTap: widget.onPressed,
-      onLongPress: widget.onLongPressed,
-      child: isFilled
-          ? button
-          : CustomPaint(
-              painter: _InnerBorderPainter(
-                color: colorScheme.outlineVariant,
-                width: 1.3,
-                borderRadius: widget.borderRadius,
+    return Semantics(
+      button: true,
+      enabled: true,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTapDown: enabled ? (_) => _setPressed(true) : null,
+        onTapUp: enabled ? (_) => _setPressed(false) : null,
+        onTapCancel: enabled ? () => _setPressed(false) : null,
+        onTap: widget.onPressed,
+        onLongPress: widget.onLongPressed,
+        child: isFilled
+            ? button
+            : CustomPaint(
+                painter: _InnerBorderPainter(
+                  color: colorScheme.outlineVariant,
+                  width: 1.3,
+                  borderRadius: widget.borderRadius,
+                ),
+                child: button,
               ),
-              child: button,
-            ),
+      ),
     );
   }
 }
