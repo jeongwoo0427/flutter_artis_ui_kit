@@ -1,11 +1,14 @@
 part of '../../flutter_artis_ui_kit.dart';
 
+enum _ButtonSize { large, normal, small }
+
 class AButton extends StatefulWidget {
   final Widget child;
   final VoidCallback? onPressed;
   final VoidCallback? onLongPressed;
   final BorderRadius borderRadius;
   final EdgeInsets padding;
+  final _ButtonSize _buttonSize;
 
   const AButton({
     super.key,
@@ -14,7 +17,7 @@ class AButton extends StatefulWidget {
     this.onLongPressed,
     this.borderRadius = const BorderRadius.all(Radius.circular(999)),
     this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-  });
+  }) : _buttonSize = _ButtonSize.normal;
 
   const AButton.large({
     super.key,
@@ -23,7 +26,7 @@ class AButton extends StatefulWidget {
     this.onLongPressed,
     this.borderRadius = const BorderRadius.all(Radius.circular(999)),
     this.padding = const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-  });
+  }) : _buttonSize = _ButtonSize.large;
 
   @override
   State<AButton> createState() => _AButtonState();
@@ -42,8 +45,17 @@ class _AButtonState extends State<AButton> {
     final colorScheme = Theme.of(context).colorScheme;
     final enabled = widget.onPressed != null || widget.onLongPressed != null;
 
-    final Color backgroundColor = _isPressed ? colorScheme.outlineVariant.withValues(alpha: 0.3) : Colors.transparent;
+    final Color backgroundColor = _isPressed
+        ? colorScheme.outlineVariant.withValues(alpha: 0.3)
+        : Colors.transparent;
     final Color textColor = colorScheme.onSurface;
+
+    double fontSize = 14;
+    FontWeight fontWeight = FontWeight.w500;
+    if (widget._buttonSize == _ButtonSize.large) {
+      fontSize = 16;
+      fontWeight = FontWeight.w700;
+    }
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -62,7 +74,11 @@ class _AButtonState extends State<AButton> {
           border: Border.all(color: colorScheme.outlineVariant, width: 1.3),
         ),
         child: DefaultTextStyle.merge(
-          style: TextStyle(color: textColor, fontWeight: FontWeight.w500, fontSize: 14),
+          style: TextStyle(
+            color: textColor,
+            fontWeight: fontWeight,
+            fontSize: fontSize,
+          ),
           child: IconTheme.merge(
             data: IconThemeData(color: textColor),
             child: widget.child,
