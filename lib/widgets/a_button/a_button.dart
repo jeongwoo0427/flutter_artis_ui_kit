@@ -8,8 +8,11 @@ class AButton extends StatefulWidget {
   final VoidCallback? onLongPressed;
   final BorderRadius borderRadius;
   final EdgeInsets padding;
-  final bool filled;
+  final bool fullFilled;
   final Color? filledColor;
+  final Color? contentColor;
+  final Color? outlineColor;
+  final Color? splashColor;
   final double minHeight;
   final double minWidth;
   final _ButtonSize _buttonSize;
@@ -21,8 +24,11 @@ class AButton extends StatefulWidget {
     this.onLongPressed,
     this.borderRadius = const BorderRadius.all(Radius.circular(999)),
     this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-    this.filled = false,
+    this.fullFilled = false,
     this.filledColor,
+    this.contentColor,
+    this.outlineColor,
+    this.splashColor,
     this.minHeight = 38,
     this.minWidth = 80,
   }) : _buttonSize = _ButtonSize.normal;
@@ -34,8 +40,11 @@ class AButton extends StatefulWidget {
     this.onLongPressed,
     this.borderRadius = const BorderRadius.all(Radius.circular(999)),
     this.padding = const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-    this.filled = false,
+    this.fullFilled = false,
     this.filledColor,
+    this.contentColor,
+    this.outlineColor,
+    this.splashColor,
     this.minHeight = 54,
     this.minWidth = 130,
   }) : _buttonSize = _ButtonSize.large;
@@ -47,8 +56,11 @@ class AButton extends StatefulWidget {
     this.onLongPressed,
     this.borderRadius = const BorderRadius.all(Radius.circular(999)),
     this.padding = const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-    this.filled = false,
+    this.fullFilled = false,
     this.filledColor,
+    this.contentColor,
+    this.outlineColor,
+    this.splashColor,
     this.minHeight = 28,
     this.minWidth = 50,
   }) : _buttonSize = _ButtonSize.small;
@@ -70,15 +82,6 @@ class _AButtonState extends State<AButton> {
     final colorScheme = Theme.of(context).colorScheme;
     final enabled = widget.onPressed != null || widget.onLongPressed != null;
 
-    final bool isFilled = widget.filled;
-
-    final Color baseFillColor = widget.filledColor ?? colorScheme.primaryContainer;
-    final Color backgroundColor = isFilled
-        ? (_isPressed ? baseFillColor.withValues(alpha: 0.65) : baseFillColor)
-        : (_isPressed ? colorScheme.outlineVariant.withValues(alpha: 0.3) : Colors.transparent);
-
-    final Color contentColor = isFilled ? colorScheme.onPrimaryContainer : colorScheme.onSurface;
-
     double fontSize = 14;
     FontWeight fontWeight = FontWeight.w500;
     if (widget._buttonSize == _ButtonSize.large) {
@@ -89,17 +92,60 @@ class _AButtonState extends State<AButton> {
       fontWeight = FontWeight.w500;
     }
 
+    final Color filledColor =
+        widget.filledColor ??
+        (widget.fullFilled ? colorScheme.primaryContainer : Colors.transparent);
+
+    final Color outlineColor =
+        widget.outlineColor ??
+        (widget.fullFilled ? filledColor : colorScheme.outlineVariant);
+
+    final Color contentColor =
+        widget.contentColor ??
+        (widget.fullFilled
+            ? colorScheme.onPrimaryContainer
+            : colorScheme.onSurface);
+
+    final Color splashColor =
+        widget.splashColor ?? (widget.fullFilled ? colorScheme.onPrimaryContainer : colorScheme.onSurface);
+
+    final Widget splashOverlay = IgnorePointer(
+      ignoring: true,
+      child: AnimatedOpacity(
+        opacity: _isPressed ? 0.3 : 0,
+        duration: Duration(milliseconds: 200),
+        curve: Curves.ease,
+        child: Container(
+          decoration: BoxDecoration(
+            color: splashColor,
+            borderRadius: widget.borderRadius,
+          ),
+        ),
+      ),
+    );
+
     final Widget button = AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
-      curve: Curves.easeInOut,
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.ease,
       padding: widget.padding,
-      constraints: BoxConstraints(minHeight: widget.minHeight, minWidth: widget.minWidth),
-      decoration: BoxDecoration(color: backgroundColor, borderRadius: widget.borderRadius),
+      constraints: BoxConstraints(
+        minHeight: widget.minHeight,
+        minWidth: widget.minWidth,
+      ),
+      decoration: BoxDecoration(
+        color: filledColor,
+        borderRadius: widget.borderRadius,
+        border: BoxBorder.all(color: outlineColor, width: 1.3),
+      ),
       child: Align(
         alignment: Alignment.center,
         widthFactor: 1,
         child: DefaultTextStyle.merge(
-          style: TextStyle(color: contentColor, fontSize: fontSize, fontWeight: fontWeight),
+          style: TextStyle(
+            color: contentColor,
+            fontSize: fontSize,
+            fontWeight: fontWeight,
+          ),
           child: IconTheme.merge(
             data: IconThemeData(color: contentColor),
             child: widget.child,
@@ -110,7 +156,7 @@ class _AButtonState extends State<AButton> {
 
     return Semantics(
       button: true,
-      enabled: true,
+      enabled: enabled,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTapDown: enabled ? (_) => _setPressed(true) : null,
@@ -118,43 +164,13 @@ class _AButtonState extends State<AButton> {
         onTapCancel: enabled ? () => _setPressed(false) : null,
         onTap: widget.onPressed,
         onLongPress: widget.onLongPressed,
-        child: isFilled
-            ? button
-            : CustomPaint(
-                painter: _InnerBorderPainter(
-                  color: colorScheme.outlineVariant,
-                  width: 1.3,
-                  borderRadius: widget.borderRadius,
-                ),
-                child: button,
-              ),
+        child: Stack(
+          children: [
+            button,
+            Positioned.fill(child: splashOverlay),
+          ],
+        ),
       ),
     );
-  }
-}
-
-class _InnerBorderPainter extends CustomPainter {
-  final Color color;
-  final double width;
-  final BorderRadius borderRadius;
-
-  const _InnerBorderPainter({required this.color, required this.width, required this.borderRadius});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final rect = Offset.zero & size;
-    final innerRect = rect.deflate(width / 2);
-
-    final paint = Paint()
-      ..color = color
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = width;
-
-    canvas.drawRRect(borderRadius.toRRect(innerRect), paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant _InnerBorderPainter oldDelegate) {
-    return color != oldDelegate.color || width != oldDelegate.width || borderRadius != oldDelegate.borderRadius;
   }
 }
