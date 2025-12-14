@@ -20,10 +20,10 @@ class AButton extends StatefulWidget {
     this.onPressed,
     this.onLongPressed,
     this.borderRadius = const BorderRadius.all(Radius.circular(999)),
-    this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
     this.filled = false,
     this.filledColor,
-    this.minHeight = 34,
+    this.minHeight = 38,
     this.minWidth = 80,
   }) : _buttonSize = _ButtonSize.normal;
 
@@ -46,10 +46,10 @@ class AButton extends StatefulWidget {
     this.onPressed,
     this.onLongPressed,
     this.borderRadius = const BorderRadius.all(Radius.circular(999)),
-    this.padding = const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+    this.padding = const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
     this.filled = false,
     this.filledColor,
-    this.minHeight = 24,
+    this.minHeight = 28,
     this.minWidth = 50,
   }) : _buttonSize = _ButtonSize.small;
 
@@ -84,6 +84,9 @@ class _AButtonState extends State<AButton> {
     if (widget._buttonSize == _ButtonSize.large) {
       fontSize = 18;
       fontWeight = FontWeight.w700;
+    } else if (widget._buttonSize == _ButtonSize.small) {
+      fontSize = 13;
+      fontWeight = FontWeight.w500;
     }
 
     final Widget button = AnimatedContainer(
