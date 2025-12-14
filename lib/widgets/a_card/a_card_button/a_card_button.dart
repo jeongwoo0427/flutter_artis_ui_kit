@@ -87,7 +87,7 @@ class ACardButton extends StatelessWidget {
     final BorderRadius effectiveRadius =
         borderRadius ?? BorderRadius.circular(_defaultRadius ?? 12);
 
-    return ACardButton(
+    return ACard(
       child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
