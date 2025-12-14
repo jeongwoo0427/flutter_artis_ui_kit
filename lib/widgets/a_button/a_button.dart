@@ -73,7 +73,7 @@ class AButton extends StatelessWidget {
 
     final Color autoContentColor = isLightFilled ? Colors.black.withValues(alpha: 0.7) : Colors.white;
 
-    final Color autoHighlightColor = isLightFilled ? Colors.black.withValues(alpha: 0.3) : Colors.white;
+    final Color autoHighlightColor = isLightFilled ? Colors.black : Colors.white;
 
     final Color finalOutlineColor = filled ? finalFilledColor : color ?? colorScheme.outlineVariant;
 
