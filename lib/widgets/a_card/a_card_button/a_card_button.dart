@@ -1,6 +1,6 @@
 part of '../../../flutter_artis_ui_kit.dart';
 
-class AButton extends StatelessWidget {
+class ACardButton extends StatelessWidget {
   final Widget child;
   final VoidCallback? onPressed;
   final VoidCallback? onLongPress;
@@ -16,7 +16,7 @@ class AButton extends StatelessWidget {
   final bool showBorder;
   final double? _defaultRadius; // internal default per size
 
-  const AButton({
+  const ACardButton({
     super.key,
     required this.child,
     this.color,
@@ -33,7 +33,7 @@ class AButton extends StatelessWidget {
     this.showBorder = false,
   }) : _defaultRadius = 12;
 
-  const AButton.large({
+  const ACardButton.large({
     super.key,
     required this.child,
     this.color,
@@ -53,7 +53,7 @@ class AButton extends StatelessWidget {
        showBorder = showBorder ?? false,
        _defaultRadius = 12;
 
-  const AButton.tiny({
+  const ACardButton.tiny({
     super.key,
     required this.child,
     this.color,
@@ -87,7 +87,7 @@ class AButton extends StatelessWidget {
     final BorderRadius effectiveRadius =
         borderRadius ?? BorderRadius.circular(_defaultRadius ?? 12);
 
-    return ACard(
+    return ACardButton(
       child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,

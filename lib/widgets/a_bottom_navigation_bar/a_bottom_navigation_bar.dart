@@ -1,52 +1,52 @@
-part of '../flutter_artis_ui_kit.dart';
+part of '../../flutter_artis_ui_kit.dart';
 
-class AFloatingNavigationBar extends StatefulWidget {
+class ABottomNavigationBar extends StatefulWidget {
   ///It is items what you want to add
-  List<AFloatingNavigationItem> items;
+  final List<ABottomNavigationBarItem> items;
 
   ///
-  int selectedIndex;
+  final int selectedIndex;
 
   ///You can take what is current index when you tap navigation item
-  Function(int index) onTapIndex;
+  final Function(int index) onTapIndex;
 
   ///A double that determines how far it is from the bottom
-  double bottomMargin;
+  final double bottomMargin;
 
   ///Determines how much evocation effect you want to add.
-  double elevation;
+  final double elevation;
 
   ///Decide the padding you want to put inside of NavigationBar
-  double bottomPadding;
+  final double bottomPadding;
 
   ///Decide the padding you want to put inside of NavigationBar
-  double leftPadding;
+  final double leftPadding;
 
   ///Decide the padding you want to put inside of NavigationBar
-  double rightPadding;
+  final double rightPadding;
 
   ///Decide the padding you want to put inside of NavigationBar
-  double topPadding;
+  final double topPadding;
 
   ///Decide how much flexion you want to give to the corner.
-  BorderRadius? borderRadius;
+  final BorderRadius? borderRadius;
 
   ///Set up how fast movement of Cursor
-  Duration duration;
+  final Duration duration;
 
   ///The Curve of item movement
-  Curve? curves;
+  final Curve? curves;
 
   ///You can change the navigationbar color, but default color follows at the 'ThemeData.ColorScheme.SurfaceColor'
-  Color? backgroundColor;
+  final Color? backgroundColor;
 
-  double itemWidth;
+  final double itemWidth;
 
-  double itemHeight;
+  final double itemHeight;
 
-  double spacing;
+  final double spacing;
 
-  AFloatingNavigationBar({
+  ABottomNavigationBar({
     Key? key,
     required this.items,
     required this.selectedIndex,
@@ -67,11 +67,11 @@ class AFloatingNavigationBar extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<AFloatingNavigationBar> createState() =>
-      _MainMenuBottomFloatingBarState();
+  State<ABottomNavigationBar> createState() =>
+      _ABottomNavigationBarState();
 }
 
-class _MainMenuBottomFloatingBarState extends State<AFloatingNavigationBar>
+class _ABottomNavigationBarState extends State<ABottomNavigationBar>
     with TickerProviderStateMixin {
   final double _cursorWidth = 5;
 
@@ -163,7 +163,7 @@ class _MainMenuBottomFloatingBarState extends State<AFloatingNavigationBar>
 
   Widget _getNavigationItem(
     int index,
-    AFloatingNavigationItem item,
+    ABottomNavigationBarItem item,
     Function(int index) onTap,
   ) {
     ThemeData themeData = Theme.of(context);
@@ -211,9 +211,9 @@ class _MainMenuBottomFloatingBarState extends State<AFloatingNavigationBar>
   }
 }
 
-class AFloatingNavigationItem {
+class ABottomNavigationBarItem {
   final IconData icon;
   final Function? onTap;
 
-  AFloatingNavigationItem({required this.icon, this.onTap});
+  ABottomNavigationBarItem({required this.icon, this.onTap});
 }

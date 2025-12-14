@@ -18,7 +18,7 @@ class ACard extends StatefulWidget {
     required this.child,
     this.onPressed,
     this.onLongPress,
-    this.elevation = 0,
+    this.elevation = 4,
     this.color,
     this.borderRadius,
     this.padding,
