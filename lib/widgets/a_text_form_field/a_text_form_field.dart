@@ -35,7 +35,7 @@ class ATextFormField extends StatelessWidget {
     this.labelText,
     this.maxLength,
     this.minLines,
-    this.maxLines,
+    this.maxLines = 1,
     this.obsecureText,
     this.keyboardType,
     this.funValidator,
@@ -79,11 +79,8 @@ class ATextFormField extends StatelessWidget {
         constraints: constraints,
         filled: true,
         fillColor: themeData.colorScheme.onSurface.withValues(alpha: 0.15),
-        prefixIcon: prefixIcon != null
-            ? Padding(padding: const EdgeInsets.only(left: 10, right: 10), child: prefixIcon)
-            : null,
-        suffixIcon: Padding(padding: EdgeInsets.only(left: 10, right: 10), child: suffixIcon),
-        suffixIconConstraints: BoxConstraints(minWidth: 10, minHeight: 0),
+        prefixIcon: prefixIcon,
+        suffixIcon: suffixIcon,
         isDense: true,
         contentPadding: contentPadding,
         enabledBorder: OutlineInputBorder(
@@ -110,7 +107,7 @@ class ATextFormField extends StatelessWidget {
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: borderRadius ?? BorderRadius.circular(10),
-          borderSide: BorderSide(color: themeData.colorScheme.onBackground, width: borderWidth),
+          borderSide: BorderSide(color: themeData.colorScheme.onSurface, width: borderWidth),
         ),
       ),
     );
