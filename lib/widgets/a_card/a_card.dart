@@ -58,6 +58,12 @@ class _ACardState extends State<ACard> {
   bool get _enabled => widget.onPressed != null || widget.onLongPress != null;
 
   @override
+  void dispose() {
+    _releaseTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 

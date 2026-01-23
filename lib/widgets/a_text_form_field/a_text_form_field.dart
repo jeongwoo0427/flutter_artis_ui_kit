@@ -9,7 +9,7 @@ class ATextFormField extends StatelessWidget {
   final int? maxLength;
   final int? minLines;
   final int? maxLines;
-  final bool? obsecureText;
+  final bool? obscureText;
   final TextInputType? keyboardType;
   final String? Function(String?)? funValidator;
   final ValueChanged<String>? onChanged;
@@ -36,7 +36,7 @@ class ATextFormField extends StatelessWidget {
     this.maxLength,
     this.minLines,
     this.maxLines = 1,
-    this.obsecureText,
+    this.obscureText,
     this.keyboardType,
     this.funValidator,
     this.onChanged,
@@ -57,7 +57,8 @@ class ATextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeData themeData = Theme.of(context);
-    return TextFormField(
+
+    final textField = TextFormField(
       focusNode: focusNode,
       maxLength: maxLength,
       controller: controller,
@@ -65,7 +66,7 @@ class ATextFormField extends StatelessWidget {
       minLines: minLines,
       maxLines: maxLines,
       keyboardType: keyboardType,
-      obscureText: obsecureText ?? false,
+      obscureText: obscureText ?? false,
       onChanged: onChanged,
       onFieldSubmitted: onSubmitted,
       enabled: enabled,
@@ -86,14 +87,14 @@ class ATextFormField extends StatelessWidget {
         enabledBorder: OutlineInputBorder(
           borderRadius: borderRadius ?? BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: Colors.transparent, //themeData.colorScheme.onBackground.withOpacity(0.3),
+            color: Colors.transparent,
             width: borderWidth,
           ),
         ),
         disabledBorder: OutlineInputBorder(
           borderRadius: borderRadius ?? BorderRadius.circular(10),
           borderSide: BorderSide(
-            color: Colors.transparent, //themeData.colorScheme.onBackground.withOpacity(0.3),
+            color: Colors.transparent,
             width: borderWidth,
           ),
         ),
@@ -110,6 +111,29 @@ class ATextFormField extends StatelessWidget {
           borderSide: BorderSide(color: themeData.colorScheme.onSurface, width: borderWidth),
         ),
       ),
+    );
+
+    if (title.isEmpty) {
+      return textField;
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: Text(
+            title,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: themeData.colorScheme.onSurface,
+            ),
+          ),
+        ),
+        textField,
+      ],
     );
   }
 }
