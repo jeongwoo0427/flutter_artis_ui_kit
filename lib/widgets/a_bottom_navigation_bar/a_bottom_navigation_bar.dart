@@ -75,10 +75,6 @@ class _ABottomNavigationBarState extends State<ABottomNavigationBar>
     with TickerProviderStateMixin {
   final double _cursorWidth = 5;
 
-  initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     ThemeData themeData = Theme.of(context);

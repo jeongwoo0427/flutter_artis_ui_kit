@@ -83,6 +83,7 @@ class AButton extends StatelessWidget {
 
     return MaterialButton(
       onPressed: onPressed,
+      onLongPress: onLongPressed,
       child: DefaultTextStyle.merge(
         style: TextStyle(color: finalContentColor, fontSize: fontSize, fontWeight: fontWeight),
         child: IconTheme.merge(
