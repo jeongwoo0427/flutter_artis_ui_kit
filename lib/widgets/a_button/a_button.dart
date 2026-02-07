@@ -81,13 +81,23 @@ class AButton extends StatelessWidget {
 
     final Color finalHighlightColor = filled ? autoHighlightColor : colorScheme.onSurface;
 
+    final bool isDisabled = onPressed == null && onLongPressed == null;
+
+    final Color disabledContentColor = finalContentColor.withValues(alpha: 0.3);
+    final Color disabledFilledColor = filled ? finalFilledColor.withValues(alpha: 0.3) : Colors.transparent;
+    final Color disabledOutlineColor = finalOutlineColor.withValues(alpha: 0.7);
+
     return MaterialButton(
       onPressed: onPressed,
       onLongPress: onLongPressed,
       child: DefaultTextStyle.merge(
-        style: TextStyle(color: finalContentColor, fontSize: fontSize, fontWeight: fontWeight),
+        style: TextStyle(
+          color: isDisabled ? disabledContentColor : finalContentColor,
+          fontSize: fontSize,
+          fontWeight: fontWeight,
+        ),
         child: IconTheme.merge(
-          data: IconThemeData(color: finalContentColor),
+          data: IconThemeData(color: isDisabled ? disabledContentColor : finalContentColor),
           child: child,
         ),
       ),
@@ -95,11 +105,15 @@ class AButton extends StatelessWidget {
           ? RoundedRectangleBorder(borderRadius: borderRadius)
           : RoundedRectangleBorder(
               borderRadius: borderRadius,
-              side: BorderSide(color: finalOutlineColor, width: 1),
+              side: BorderSide(
+                color: isDisabled ? disabledOutlineColor : finalOutlineColor,
+                width: 1,
+              ),
             ),
       elevation: 0,
       splashColor: Colors.transparent,
       color: finalFilledColor,
+      disabledColor: disabledFilledColor,
       highlightColor: finalHighlightColor.withValues(alpha: 0.3),
       minWidth: minWidth,
       padding: padding,
