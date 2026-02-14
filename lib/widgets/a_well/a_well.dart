@@ -1,0 +1,37 @@
+part of '../../flutter_artis_ui_kit.dart';
+
+class AWell extends InkWell {
+  const AWell({
+    super.key,
+    super.onTap,
+    super.onDoubleTap,
+    super.onLongPress,
+    super.onTapDown,
+    super.onTapUp,
+    super.onTapCancel,
+    super.onSecondaryTap,
+    super.onSecondaryTapUp,
+    super.onSecondaryTapDown,
+    super.onSecondaryTapCancel,
+    super.onHighlightChanged,
+    super.onHover,
+    super.mouseCursor,
+    super.focusColor,
+    super.hoverColor,
+    super.highlightColor,
+    super.overlayColor,
+    super.splashColor,
+    super.radius,
+    super.borderRadius,
+    super.customBorder,
+    super.enableFeedback,
+    super.excludeFromSemantics,
+    super.focusNode,
+    super.canRequestFocus,
+    super.onFocusChange,
+    super.autofocus,
+    super.statesController,
+    super.hoverDuration,
+    super.child,
+  }) : super(splashFactory: NoSplash.splashFactory);
+}
