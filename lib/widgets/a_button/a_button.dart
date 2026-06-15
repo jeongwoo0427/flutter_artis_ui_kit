@@ -83,8 +83,15 @@ class AButton extends StatelessWidget {
 
     final bool isDisabled = onPressed == null && onLongPressed == null;
 
+    // disabled는 채움색 정체성을 유지하되 흐리게: 채움색 @ 0.3을 surface에 합성해
+    // 기존 색감 그대로(투명만 제거) 불투명으로 굳힌다. 라이트/다크는 surface가 자동 대응.
     final Color disabledContentColor = finalContentColor.withValues(alpha: 0.3);
-    final Color disabledFilledColor = filled ? finalFilledColor.withValues(alpha: 0.3) : Colors.transparent;
+    final Color disabledFilledColor = filled
+        ? Color.alphaBlend(
+            finalFilledColor.withValues(alpha: 0.5),
+            colorScheme.surface,
+          )
+        : Colors.transparent;
     final Color disabledOutlineColor = finalOutlineColor.withValues(alpha: 0.7);
 
     return MaterialButton(

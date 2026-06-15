@@ -174,7 +174,9 @@ class _ABottomNavigationBarState extends State<ABottomNavigationBar>
         color: Colors.transparent,
         child: InkWell(
           customBorder: const CircleBorder(),
-          child: Icon(item.icon, color: itemColor),
+          child: item.iconBuilder != null
+              ? item.iconBuilder!(itemColor ?? themeData.colorScheme.onSurface)
+              : Icon(item.icon!, color: itemColor),
           onTap: () {
             if (item.onTap != null) {
               item.onTap!();
@@ -209,8 +211,13 @@ class _ABottomNavigationBarState extends State<ABottomNavigationBar>
 }
 
 class ABottomNavigationBarItem {
-  final IconData icon;
+  final IconData? icon;
+  final Widget Function(Color color)? iconBuilder;
   final Function? onTap;
 
-  ABottomNavigationBarItem({required this.icon, this.onTap});
+  ABottomNavigationBarItem({this.icon, this.iconBuilder, this.onTap})
+      : assert(
+          icon != null || iconBuilder != null,
+          'Either icon or iconBuilder must be provided.',
+        );
 }
