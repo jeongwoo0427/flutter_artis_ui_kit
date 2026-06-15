@@ -164,28 +164,69 @@ class _ABottomNavigationBarState extends State<ABottomNavigationBar>
     Function(int index) onTap,
   ) {
     ThemeData themeData = Theme.of(context);
-    Color? itemColor = widget.selectedIndex == index
-        ? themeData.colorScheme.primary
-        : null;
-    return Container(
-      width: widget.itemWidth,
-      height: widget.itemHeight,
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          customBorder: const CircleBorder(),
-          child: item.iconBuilder != null
-              ? item.iconBuilder!(itemColor ?? themeData.colorScheme.onSurface)
-              : Icon(item.icon!, color: itemColor),
-          onTap: () {
-            if (item.onTap != null) {
-              item.onTap!();
-              return;
-            }
+    final bool selected = widget.selectedIndex == index;
+    final Color? itemColor = selected ? themeData.colorScheme.primary : null;
+    final Color resolvedColor = itemColor ?? themeData.colorScheme.onSurface;
 
-            onTap(index);
-            setState(() {});
-          },
+    final Widget icon = item.iconBuilder != null
+        ? item.iconBuilder!(resolvedColor)
+        : Icon(item.icon!, color: itemColor);
+
+    void handleTap() {
+      if (item.onTap != null) {
+        item.onTap!();
+        return;
+      }
+      onTap(index);
+      setState(() {});
+    }
+
+    // 라벨이 없으면 기존 동작(원형 아이콘 버튼) 그대로 유지
+    if (item.label == null) {
+      return Container(
+        width: widget.itemWidth,
+        height: widget.itemHeight,
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            customBorder: const CircleBorder(),
+            child: icon,
+            onTap: handleTap,
+          ),
+        ),
+      );
+    }
+
+    // 라벨이 있으면 아이콘 + 메뉴명을 세로로 배치 (간격 최소화)
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: handleTap,
+        child: SizedBox(
+          width: widget.itemWidth,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                height: widget.itemHeight,
+                child: Center(child: icon),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                item.label!,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 11,
+                  height: 1.0,
+                  fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                  color: resolvedColor,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -215,8 +256,15 @@ class ABottomNavigationBarItem {
   final Widget Function(Color color)? iconBuilder;
   final Function? onTap;
 
-  ABottomNavigationBarItem({this.icon, this.iconBuilder, this.onTap})
-      : assert(
+  /// 아이콘 아래에 표시할 메뉴명. null이면 아이콘만 표시(기존 동작).
+  final String? label;
+
+  ABottomNavigationBarItem({
+    this.icon,
+    this.iconBuilder,
+    this.onTap,
+    this.label,
+  }) : assert(
           icon != null || iconBuilder != null,
           'Either icon or iconBuilder must be provided.',
         );
