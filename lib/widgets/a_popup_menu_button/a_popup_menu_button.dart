@@ -17,11 +17,18 @@ class APopupMenuItem<T> {
   /// false이면 아이템이 비활성화되어 선택할 수 없다.
   final bool enabled;
 
+  /// 아이콘과 라벨에 함께 적용되는 색상.
+  ///
+  /// null이면 테마 기본 색상을 사용한다.
+  /// 삭제/신고 등 부정적 액션에 [ColorScheme.error]를 지정하는 식으로 활용한다.
+  final Color? color;
+
   const APopupMenuItem({
     required this.value,
     required this.icon,
     required this.label,
     this.enabled = true,
+    this.color,
   });
 }
 
@@ -176,9 +183,14 @@ class APopupMenuButton<T> extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(item.icon, size: 20),
+                Icon(item.icon, size: 20, color: item.color),
                 const SizedBox(width: 10),
-                Text(item.label),
+                Text(
+                  item.label,
+                  style: item.color != null
+                      ? TextStyle(color: item.color)
+                      : null,
+                ),
               ],
             ),
           ),
