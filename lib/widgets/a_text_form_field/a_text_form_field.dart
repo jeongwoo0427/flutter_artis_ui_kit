@@ -3,6 +3,7 @@ part of '../../flutter_artis_ui_kit.dart';
 class ATextFormField extends StatelessWidget {
   final String title;
   final String? hintText;
+  final TextStyle? hintStyle;
   final String? labelText;
   final String? counterText;
   final String? errorText;
@@ -30,6 +31,7 @@ class ATextFormField extends StatelessWidget {
     super.key,
     this.title = '',
     this.hintText = '',
+    this.hintStyle,
     this.counterText,
     this.errorText,
     this.labelText,
@@ -74,6 +76,11 @@ class ATextFormField extends StatelessWidget {
       expands: expands,
       decoration: InputDecoration(
         hintText: hintText,
+        // 힌트(placeholder)는 입력값과 구분되도록 기본적으로 살짝 희미하게.
+        hintStyle: hintStyle ??
+            TextStyle(
+              color: themeData.colorScheme.onSurface.withValues(alpha: 0.35),
+            ),
         labelText: labelText,
         counterText: counterText,
         errorText: errorText,
