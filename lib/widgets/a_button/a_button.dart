@@ -10,6 +10,15 @@ class AButton extends StatelessWidget {
   final EdgeInsets padding;
   final bool filled;
   final Color? color;
+
+  /// 명시하면 [filled] 여부와 무관하게 이 색으로 테두리를 그린다.
+  /// null이면 기존 규칙(테두리는 `filled == false`일 때만)을 그대로 따른다.
+  /// → `filled: true` + [borderColor] 지정 시 "채움 + 테두리" 조합이 가능하다.
+  final Color? borderColor;
+
+  /// 테두리 두께. [borderColor] 또는 outline 모드에서 사용.
+  final double borderWidth;
+
   final double height;
   final double minWidth;
   final _ButtonSize _buttonSize;
@@ -23,6 +32,8 @@ class AButton extends StatelessWidget {
     this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
     this.filled = false,
     this.color,
+    this.borderColor,
+    this.borderWidth = 1,
     this.height = 38,
     this.minWidth = 88,
   }) : _buttonSize = _ButtonSize.normal;
@@ -36,6 +47,8 @@ class AButton extends StatelessWidget {
     this.padding = const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
     this.filled = false,
     this.color,
+    this.borderColor,
+    this.borderWidth = 1,
     this.height = 54,
     this.minWidth = 130,
   }) : _buttonSize = _ButtonSize.large;
@@ -49,6 +62,8 @@ class AButton extends StatelessWidget {
     this.padding = const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
     this.filled = false,
     this.color,
+    this.borderColor,
+    this.borderWidth = 1,
     this.height = 30,
     this.minWidth = 60,
   }) : _buttonSize = _ButtonSize.small;
@@ -92,7 +107,11 @@ class AButton extends StatelessWidget {
             colorScheme.surface,
           )
         : Colors.transparent;
-    final Color disabledOutlineColor = finalOutlineColor.withValues(alpha: 0.7);
+    // 테두리 표시 여부: borderColor를 명시하면 filled와 무관하게 그린다.
+    // 미지정 시 기존 규칙(테두리는 outline 모드에서만)을 그대로 따른다.
+    final bool hasBorder = borderColor != null || !filled;
+    final Color sideColor = borderColor ?? finalOutlineColor;
+    final Color disabledSideColor = sideColor.withValues(alpha: 0.7);
 
     return MaterialButton(
       onPressed: onPressed,
@@ -108,15 +127,15 @@ class AButton extends StatelessWidget {
           child: child,
         ),
       ),
-      shape: filled
-          ? RoundedRectangleBorder(borderRadius: borderRadius)
-          : RoundedRectangleBorder(
-              borderRadius: borderRadius,
-              side: BorderSide(
-                color: isDisabled ? disabledOutlineColor : finalOutlineColor,
-                width: 1,
-              ),
-            ),
+      shape: RoundedRectangleBorder(
+        borderRadius: borderRadius,
+        side: hasBorder
+            ? BorderSide(
+                color: isDisabled ? disabledSideColor : sideColor,
+                width: borderWidth,
+              )
+            : BorderSide.none,
+      ),
       elevation: 0,
       splashColor: Colors.transparent,
       color: finalFilledColor,
