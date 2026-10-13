@@ -36,14 +36,15 @@ doc/                  테마 · 컴포넌트 · 옛 위젯 이전 안내
 
 ## 설치
 
-git 태그로 의존한다.
+`main` 브랜치로 의존한다. 실제로 쓰는 커밋은 앱의 `pubspec.lock`(`resolved-ref`)이 고정하고,
+새 킷을 받을 때만 `flutter pub upgrade flutter_artis_ui_kit` 로 올린다. 버전 표시는 `pubspec.yaml` 의 `version` 과 `CHANGELOG.md` 로 한다.
 
 ```yaml
 dependencies:
   flutter_artis_ui_kit:
     git:
       url: https://github.com/jeongwoo0427/flutter_artis_ui_kit.git
-      ref: v0.1.0
+      ref: main
 ```
 
 킷을 함께 고치며 개발할 때는 앱 루트에 `pubspec_overrides.yaml`(커밋하지 않는다)을 두어 로컬 경로로 덮는다.
