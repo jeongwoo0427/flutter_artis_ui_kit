@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../theme/a_theme_data.dart';
+import 'a_bottom_bar.dart';
 
-const double _maxContentWidth = 640;
 const Size _actionMinSize = Size(62, 52);
 const double _actionIconSize = 22;
 const double _actionIconGap = 2;
@@ -34,7 +34,7 @@ class ASelectionBarAction {
 /// 여러 개를 고른 상태에서 화면 아래에 뜨는 동작 바.
 ///
 /// 작은 아이콘 버튼들([actions]) 뒤에 남은 폭을 [primary] 가 채운다. [note] 는 그 위 오른쪽 한 줄.
-/// 콘텐츠는 최대 640 폭으로 가운데에 놓인다.
+/// 틀은 [ABottomBar] 라 [backgroundColor] · [edge] 로 면 색과 위 경계를 바꿀 수 있다.
 ///
 /// ```dart
 /// ASelectionBar(
@@ -53,6 +53,8 @@ class ASelectionBar extends StatelessWidget {
     required this.actions,
     required this.primary,
     this.note,
+    this.backgroundColor,
+    this.edge = ABottomBarEdge.line,
   });
 
   /// 앞쪽 아이콘 + 이름 버튼들.
@@ -64,66 +66,54 @@ class ASelectionBar extends StatelessWidget {
   /// 버튼 줄 위 오른쪽의 짧은 안내(`bodySmall`, 3차 글자색).
   final Widget? note;
 
+  /// 바 면 색 — [ABottomBar.backgroundColor].
+  final Color? backgroundColor;
+
+  /// 위쪽 경계 — [ABottomBar.edge].
+  final ABottomBarEdge edge;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final a = AThemeData.of(context);
 
-    return Material(
-      color: a.card,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          border: Border(
-            top: BorderSide(color: theme.colorScheme.outlineVariant),
-          ),
-        ),
-        child: SafeArea(
-          top: false,
-          minimum: EdgeInsets.only(bottom: a.spacing.md),
-          child: Padding(
-            padding: EdgeInsetsDirectional.only(
-              start: a.spacing.lg,
-              end: a.spacing.lg,
-              top: a.spacing.sm,
-            ),
-            child: Align(
-              heightFactor: 1,
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: _maxContentWidth),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    if (note != null)
-                      Padding(
-                        padding: EdgeInsetsDirectional.only(
-                          end: a.spacing.xs,
-                          bottom: a.spacing.xs,
-                        ),
-                        child: Align(
-                          alignment: AlignmentDirectional.centerEnd,
-                          child: DefaultTextStyle.merge(
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: a.textTertiary,
-                            ),
-                            textAlign: TextAlign.end,
-                            child: note!,
-                          ),
-                        ),
-                      ),
-                    Row(
-                      spacing: a.spacing.xs,
-                      children: [
-                        for (final action in actions) _ActionButton(action),
-                        Expanded(child: primary),
-                      ],
-                    ),
-                  ],
+    return ABottomBar(
+      backgroundColor: backgroundColor,
+      edge: edge,
+      padding: EdgeInsetsDirectional.only(
+        start: a.spacing.lg,
+        end: a.spacing.lg,
+        top: a.spacing.sm,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (note != null)
+            Padding(
+              padding: EdgeInsetsDirectional.only(
+                end: a.spacing.xs,
+                bottom: a.spacing.xs,
+              ),
+              child: Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: DefaultTextStyle.merge(
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: a.textTertiary,
+                  ),
+                  textAlign: TextAlign.end,
+                  child: note!,
                 ),
               ),
             ),
+          Row(
+            spacing: a.spacing.xs,
+            children: [
+              for (final action in actions) _ActionButton(action),
+              Expanded(child: primary),
+            ],
           ),
-        ),
+        ],
       ),
     );
   }

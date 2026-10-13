@@ -86,7 +86,7 @@ MaterialApp(
 | 피드백 | `AEmptyState`(`.inline`) · `ASkeleton` |
 | 내비게이션 | `AFloatingNavigationBar` · `AAdaptiveNavigation` · `ATitleTabs` · `ABreadcrumb` |
 | 오버레이 | `showABottomSheet` · `ABottomSheetScaffold` · `showAActionSheet` · `ADialog` · `showAConfirmDialog` |
-| 바 | `ABottomCta` · `ASelectionBar` |
+| 바 | `ABottomBar`(+`ABottomBarEdge` 선 · 페이드 · 없음, 면 색) · `ASelectionBar`(`ABottomBar` 위의 아이콘 동작 + 주 버튼) |
 | 레이아웃 | `AWindowSize`(compact < 600 ≤ medium < 840 ≤ expanded) · `AContentWidth`(reading 640 · list 720 · wide 1040) |
 
 모든 상태는 갤러리(`example/`)에서 톤 · 다크별로 볼 수 있다.

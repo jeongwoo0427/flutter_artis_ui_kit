@@ -12,7 +12,7 @@ Widget _app(Widget bar) => MaterialApp(
 );
 
 void main() {
-  group('ABottomCta', () {
+  group('ABottomBar', () {
     testWidgets('child fills width but at most 640 on a wide surface', (
       tester,
     ) async {
@@ -23,7 +23,7 @@ void main() {
       const key = Key('cta');
       await tester.pumpWidget(
         _app(
-          ABottomCta(
+          ABottomBar(
             child: FilledButton(
               key: key,
               onPressed: () {},
@@ -47,8 +47,8 @@ void main() {
       const key = Key('cta');
       await tester.pumpWidget(
         _app(
-          ABottomCta(
-            fade: false,
+          ABottomBar(
+            edge: ABottomBarEdge.none,
             child: FilledButton(
               key: key,
               onPressed: () {},
@@ -63,7 +63,48 @@ void main() {
       ).spacing.screen;
       expect(tester.getSize(find.byKey(key)).width, 360 - margin * 2);
       // 페이지 높이를 다 먹지 않는다.
-      expect(tester.getSize(find.byType(ABottomCta)).height, lessThan(200));
+      expect(tester.getSize(find.byType(ABottomBar)).height, lessThan(200));
+    });
+    testWidgets('background and edge are customizable', (tester) async {
+      Future<void> pump(ABottomBarEdge edge) => tester.pumpWidget(
+        _app(
+          ABottomBar(
+            backgroundColor: Colors.amber,
+            edge: edge,
+            child: const Text('Go'),
+          ),
+        ),
+      );
+      BoxDecoration barDecoration() =>
+          tester
+                  .widget<DecoratedBox>(
+                    find
+                        .ancestor(
+                          of: find.byType(SafeArea),
+                          matching: find.byType(DecoratedBox),
+                        )
+                        .first,
+                  )
+                  .decoration
+              as BoxDecoration;
+
+      await pump(ABottomBarEdge.line);
+      expect(barDecoration().color, Colors.amber);
+      expect(barDecoration().border, isNotNull);
+
+      await pump(ABottomBarEdge.none);
+      expect(barDecoration().border, isNull);
+
+      // 페이드 — 바 위에 바 색으로 흐려지는 띠가 생긴다.
+      await pump(ABottomBarEdge.fade);
+      final gradient = tester
+          .widgetList<Container>(find.byType(Container))
+          .map((c) => c.decoration)
+          .whereType<BoxDecoration>()
+          .map((d) => d.gradient)
+          .whereType<LinearGradient>()
+          .single;
+      expect(gradient.colors.last, Colors.amber);
     });
   });
 

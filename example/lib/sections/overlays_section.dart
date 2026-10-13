@@ -109,7 +109,7 @@ List<Widget> overlaysSection(BuildContext context) {
         ),
       ],
     ),
-    label('ABottomCta (fade over scrolling content)'),
+    label('ABottomBar (page color + fade over scrolling content)'),
     box(
       height: 220,
       child: Stack(
@@ -122,7 +122,9 @@ List<Widget> overlaysSection(BuildContext context) {
             left: 0,
             right: 0,
             bottom: 0,
-            child: ABottomCta(
+            child: ABottomBar(
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              edge: ABottomBarEdge.fade,
               child: Row(
                 spacing: a.spacing.sm,
                 children: [

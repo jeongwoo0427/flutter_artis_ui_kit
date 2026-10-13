@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.0.0
+
+- **깨지는 변경:** `ABottomCta` → **`ABottomBar`**. 하단 버튼 바 하나로 합쳤다 — 면 색(`backgroundColor`, 기본 `card`), 위 경계(`edge`: `line` 기본 · `fade` · `none`),
+  `fadeHeight` · `padding` · `maxContentWidth` 를 고를 수 있다. 옛 `ABottomCta(fade: true)` = `ABottomBar(backgroundColor: scaffoldBackgroundColor, edge: ABottomBarEdge.fade)`.
+- `ASelectionBar` 가 `ABottomBar` 위에서 그려진다 — `backgroundColor` · `edge` 를 그대로 받는다.
+
 ## 2.2.0
 
 - `AMotion.long`(360ms) — 화면 가장자리 바가 들고 나는 것처럼 멀리 움직이는 전환용.
