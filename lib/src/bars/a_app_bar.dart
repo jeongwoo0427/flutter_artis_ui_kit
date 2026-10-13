@@ -10,7 +10,8 @@ import '../theme/a_theme_data.dart';
 ///
 /// 내용이 바 뒤로 지나가게 하려면 `Scaffold(extendBodyBehindAppBar: true)` 로 두고, 본문 위 여백은
 /// 본문 안쪽 context 의 `MediaQuery.paddingOf(context).top`(바 높이 + 상태 표시줄)을 쓴다.
-/// 그렇게 하지 않으면 바 뒤가 페이지라서 지금의 불투명 바와 똑같이 보인다.
+/// 그렇지 않은 Scaffold 에서는 바 뒤에 흐릴 내용이 없으므로 **흐리지 않고 불투명하게** 그린다
+/// (보이는 것은 같고, 흐림 비용을 아낀다).
 ///
 /// ```dart
 /// Scaffold(
@@ -84,6 +85,9 @@ class AAppBar extends StatelessWidget implements PreferredSizeWidget {
     final a = AThemeData.of(context);
     final color =
         backgroundColor ?? theme.appBarTheme.backgroundColor ?? a.page;
+    // 본문이 바 뒤로 오지 않으면 유리를 끈다 — 페이지 위 반투명 페이지색은 불투명과 같아 보인다.
+    final behind =
+        Scaffold.maybeOf(context)?.widget.extendBodyBehindAppBar ?? true;
     // 바 자체는 투명이라 AppBar 가 상태 표시줄 글자색을 정하지 못한다 — 면 색 기준으로 정해 준다.
     final iconBrightness =
         ThemeData.estimateBrightnessForColor(color) == Brightness.dark
@@ -112,7 +116,7 @@ class AAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
       flexibleSpace: GlassSurface(
         color: color,
-        glass: glass ?? a.glass,
+        glass: behind ? glass ?? a.glass : AGlass.none,
         child: const SizedBox.expand(),
       ),
     );

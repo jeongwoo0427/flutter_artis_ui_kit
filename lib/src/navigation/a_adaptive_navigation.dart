@@ -48,20 +48,25 @@ class AAdaptiveNavigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (context.windowSize != AWindowSize.expanded) {
-      return Scaffold(
-        extendBody: true,
-        body: body,
-        bottomNavigationBar: IgnorePointer(
-          ignoring: !navigationVisible,
-          child: AnimatedSlide(
-            offset: navigationVisible ? Offset.zero : const Offset(0, 1.6),
-            // 화면 밖까지 멀리 움직이므로 길게 · 양끝 부드럽게(짧으면 순간이동처럼 보인다).
-            duration: AThemeData.of(context).motion.long,
-            curve: Curves.easeInOutCubic,
-            child: AFloatingNavigationBar(
-              destinations: destinations,
-              selectedIndex: selectedIndex,
-              onDestinationSelected: onDestinationSelected,
+      // 탭 화면의 유리 상단 바(`AAppBar`)와 하단 탭은 겹치지 않고 흐림 값도 같다 —
+      // 한 그룹으로 묶어 뒤 내용을 한 번만 흐린다(`BackdropFilter.grouped`).
+      // 상세 화면은 이 셸 위(루트 내비게이터)에 쌓이므로 그룹에 들어오지 않는다.
+      return BackdropGroup(
+        child: Scaffold(
+          extendBody: true,
+          body: body,
+          bottomNavigationBar: IgnorePointer(
+            ignoring: !navigationVisible,
+            child: AnimatedSlide(
+              offset: navigationVisible ? Offset.zero : const Offset(0, 1.6),
+              // 화면 밖까지 멀리 움직이므로 길게 · 양끝 부드럽게(짧으면 순간이동처럼 보인다).
+              duration: AThemeData.of(context).motion.long,
+              curve: Curves.easeInOutCubic,
+              child: AFloatingNavigationBar(
+                destinations: destinations,
+                selectedIndex: selectedIndex,
+                onDestinationSelected: onDestinationSelected,
+              ),
             ),
           ),
         ),

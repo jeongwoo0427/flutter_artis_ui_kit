@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_artis_ui_kit/flutter_artis_ui_kit.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -58,5 +59,42 @@ void main() {
           .first,
     );
     expect(ignore.ignoring, isTrue);
+  });
+
+  testWidgets('tab screen glass bar and floating bar share one backdrop', (
+    tester,
+  ) async {
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(400, 800);
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AThemeBuilder.light(
+          tone: ATone.fromBrand(const Color(0xFF3182F6)),
+        ),
+        home: const AAdaptiveNavigation(
+          destinations: [
+            NavigationDestination(
+              icon: Icon(Icons.home_rounded),
+              label: 'Home',
+            ),
+            NavigationDestination(icon: Icon(Icons.person), label: 'Me'),
+          ],
+          selectedIndex: 0,
+          body: Scaffold(
+            extendBodyBehindAppBar: true,
+            appBar: AAppBar(title: Text('Home')),
+            body: SizedBox.expand(),
+          ),
+        ),
+      ),
+    );
+    final keys = tester
+        .renderObjectList<RenderBackdropFilter>(find.byType(BackdropFilter))
+        .map((r) => r.backdropKey)
+        .toList();
+    expect(keys, hasLength(2));
+    expect(keys.first, isNotNull);
+    expect(keys.toSet(), hasLength(1));
   });
 }

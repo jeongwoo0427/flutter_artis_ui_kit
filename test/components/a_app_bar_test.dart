@@ -58,6 +58,7 @@ void main() {
       MaterialApp(
         theme: _theme,
         home: Scaffold(
+          extendBodyBehindAppBar: true,
           appBar: const AAppBar(title: Text('Bank')),
           bottomNavigationBar: AFloatingNavigationBar(
             destinations: const [
@@ -122,6 +123,20 @@ void main() {
   testWidgets('AGlass.none draws an opaque bar without blur', (tester) async {
     await tester.pumpWidget(
       _app(const AAppBar(title: Text('Bank'), glass: AGlass.none)),
+    );
+    expect(find.byType(BackdropFilter), findsNothing);
+    expect(_surfaceColor(tester), _theme.extension<AThemeData>()!.page);
+  });
+
+  testWidgets('nothing behind the bar — opaque and no blur', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: _theme,
+        home: const Scaffold(
+          appBar: AAppBar(title: Text('Detail')),
+          body: SizedBox.expand(),
+        ),
+      ),
     );
     expect(find.byType(BackdropFilter), findsNothing);
     expect(_surfaceColor(tester), _theme.extension<AThemeData>()!.page);

@@ -8,6 +8,9 @@ import '../foundation/a_tokens.dart';
 /// 지나가는 내용을 `glass.blurSigma` 만큼 흐린다. 흐림은 [borderRadius] 모양(없으면 사각형) 안에서만.
 ///
 /// 킷 내부용 — `AFloatingNavigationBar` · `AAppBar` 가 같은 모양으로 그리려고 나눠 쓴다.
+///
+/// 흐림은 `BackdropFilter.grouped` 라 위에 [BackdropGroup] 이 있으면(`AAdaptiveNavigation`) 그 안의
+/// 유리 면들이 뒤 내용을 **한 번만** 흐려 나눠 쓴다(Impeller). 없으면 보통 `BackdropFilter` 와 같다.
 class GlassSurface extends StatelessWidget {
   /// [child] 뒤에 유리 면을 깐다.
   const GlassSurface({
@@ -45,7 +48,7 @@ class GlassSurface extends StatelessWidget {
       child: child,
     );
     if (glass.blurSigma > 0) {
-      surface = BackdropFilter(
+      surface = BackdropFilter.grouped(
         filter: ImageFilter.blur(
           sigmaX: glass.blurSigma,
           sigmaY: glass.blurSigma,

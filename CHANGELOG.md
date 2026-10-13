@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.1.0
+
+- 유리 면 성능: 흐림을 `BackdropFilter.grouped` 로 — `AAdaptiveNavigation`(좁은 창)이 `BackdropGroup` 을 깔아, 탭 화면의 `AAppBar` 와 하단 탭이 뒤 내용을 **한 번만** 흐려 나눠 쓴다(Impeller). 두 바는 겹치지 않고 같은 `AGlass` 를 쓴다.
+- `AAppBar`: 본문이 바 뒤로 오지 않는 Scaffold(`extendBodyBehindAppBar: false`)에서는 흐리지 않고 불투명하게 — 보이는 것은 같고 흐림 비용이 없다.
+
 ## 4.0.0
 
 - **`AAppBar`** — 유리처럼 그리는 상단 바. Material `AppBar` 자리에 같은 이름의 인자(`title` · `leading` · `actions` · `bottom` · `centerTitle` · `titleSpacing` · `leadingWidth` · `backgroundColor` · `foregroundColor`)로 쓴다.
