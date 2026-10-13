@@ -1,0 +1,17 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    # 1.0 이전 옛 위젯 — 2.0.0 에서 삭제한다. 새 규칙을 소급하지 않는다.
+    - lib/legacy.dart
+    - lib/src/legacy/**
+    - example/**
+
+linter:
+  rules:
+    public_member_api_docs: true
+    prefer_const_constructors: true
+    prefer_const_declarations: true
+    prefer_final_locals: true
+    sort_child_properties_last: true
+    use_super_parameters: true

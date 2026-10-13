@@ -1,0 +1,21 @@
+name: ci
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.44.2
+          channel: stable
+      - run: flutter pub get
+      # 옛 위젯(legacy)은 포맷 검사에서 뺀다 — 2.0.0 에서 삭제된다.
+      - run: dart format --output=none --set-exit-if-changed $(find lib test -name '*.dart' -not -path 'lib/src/legacy/*' -not -name legacy.dart)
+      - run: flutter analyze
+      - run: flutter test
