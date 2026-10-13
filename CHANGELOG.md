@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.0.0
+
+- **깨지는 변경:** 1.0 이전 옛 위젯(`legacy.dart` — 옛 `AButton` · `ACard` · `ACardButton` · `AWell` · `ATextFormField` · `APopupMenuButton` · `ABottomNavigationBar` · `ASampleText`)을 삭제했다.
+  옮기는 방법은 `doc/migration_from_legacy.md`.
+- `AThemeBuilder` 가 `SegmentedButton` 도 맞춘다 — 고른 칸 = 연한 primary(`primaryContainer`), 나머지 = 투명 + 보조 글자색.
+  M3 기본(`secondaryContainer`)은 회색 면과 거의 같아 카드 · 시트 위에서 고른 칸이 보이지 않았다.
+
 ## 1.0.0
 
 새 디자인 시스템의 첫 안정판 — 테마 빌더(0.2.0) 위에 컴포넌트 24개.

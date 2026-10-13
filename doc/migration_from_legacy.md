@@ -1,6 +1,6 @@
 # 옛 위젯에서 옮기기
 
-1.0 이전 위젯은 `package:flutter_artis_ui_kit/legacy.dart` 에 있고 **2.0.0 에서 삭제된다.**
+1.0 이전 위젯은 1.x 의 `package:flutter_artis_ui_kit/legacy.dart` 에 있었고 **2.0.0 에서 삭제했다.**
 남은 사용처는 import 경로로 찾는다.
 
 ```bash

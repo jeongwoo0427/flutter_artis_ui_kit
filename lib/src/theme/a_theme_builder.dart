@@ -231,6 +231,22 @@ abstract final class AThemeBuilder {
           color: n.textTertiary,
         ),
       ),
+      // 고른 칸 = 연한 primary(AOptionTile 의 selected 와 같은 면). M3 기본 secondaryContainer 는
+      // 회색 면과 거의 같은 색이라 카드 · 시트 위에서 고른 칸이 보이지 않는다.
+      segmentedButtonTheme: SegmentedButtonThemeData(
+        style: ButtonStyle(
+          backgroundColor: WidgetStateProperty.resolveWith(
+            (states) => states.contains(WidgetState.selected)
+                ? scheme.primaryContainer
+                : Colors.transparent,
+          ),
+          foregroundColor: WidgetStateProperty.resolveWith(
+            (states) => states.contains(WidgetState.selected)
+                ? scheme.onPrimaryContainer
+                : n.textSecondary,
+          ),
+        ),
+      ),
       tooltipTheme: TooltipThemeData(
         decoration: BoxDecoration(
           color: n.inverse,

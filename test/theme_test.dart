@@ -52,6 +52,16 @@ void main() {
       expect(dark.scaffoldBackgroundColor, ANeutrals.dark.page);
     });
 
+    test('세그먼트 버튼 — 고른 칸은 연한 primary, 나머지는 투명', () {
+      final theme = AThemeBuilder.light(tone: tone);
+      final style = theme.segmentedButtonTheme.style!;
+      expect(
+        style.backgroundColor!.resolve({WidgetState.selected}),
+        theme.colorScheme.primaryContainer,
+      );
+      expect(style.backgroundColor!.resolve({}), Colors.transparent);
+    });
+
     testWidgets('확장이 없는 테마에서도 AThemeData.of 가 동작한다', (tester) async {
       late AThemeData data;
       await tester.pumpWidget(

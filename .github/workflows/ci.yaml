@@ -15,7 +15,6 @@ jobs:
           flutter-version: 3.44.2
           channel: stable
       - run: flutter pub get
-      # 옛 위젯(legacy)은 포맷 검사에서 뺀다 — 2.0.0 에서 삭제된다.
-      - run: dart format --output=none --set-exit-if-changed $(find lib test -name '*.dart' -not -path 'lib/src/legacy/*' -not -name legacy.dart)
+      - run: dart format --output=none --set-exit-if-changed lib test
       - run: flutter analyze
       - run: flutter test
