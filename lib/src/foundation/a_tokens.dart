@@ -92,6 +92,7 @@ class AMotion {
     this.pressScale = 0.98,
     this.short = const Duration(milliseconds: 120),
     this.medium = const Duration(milliseconds: 200),
+    this.long = const Duration(milliseconds: 360),
   });
 
   /// 눌렀을 때 줄어드는 비율.
@@ -102,4 +103,7 @@ class AMotion {
 
   /// 선택 표시 이동 같은 중간 전환.
   final Duration medium;
+
+  /// 화면 가장자리의 바가 들고 나는 것처럼 멀리 움직이는 전환.
+  final Duration long;
 }

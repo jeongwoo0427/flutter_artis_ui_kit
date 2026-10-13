@@ -55,8 +55,9 @@ class AAdaptiveNavigation extends StatelessWidget {
           ignoring: !navigationVisible,
           child: AnimatedSlide(
             offset: navigationVisible ? Offset.zero : const Offset(0, 1.6),
-            duration: AThemeData.of(context).motion.medium,
-            curve: Curves.easeOutCubic,
+            // 화면 밖까지 멀리 움직이므로 길게 · 양끝 부드럽게(짧으면 순간이동처럼 보인다).
+            duration: AThemeData.of(context).motion.long,
+            curve: Curves.easeInOutCubic,
             child: AFloatingNavigationBar(
               destinations: destinations,
               selectedIndex: selectedIndex,
