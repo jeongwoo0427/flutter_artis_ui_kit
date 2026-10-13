@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_artis_ui_kit/flutter_artis_ui_kit.dart';
 
-/// 킷 갤러리 — 톤 · 다크를 바꿔 가며 테마가 표준 위젯에 어떻게 입혀지는지 본다.
+import 'sections/buttons_section.dart';
+import 'sections/display_section.dart';
+import 'sections/navigation_section.dart';
+import 'sections/overlays_section.dart';
+import 'sections/surfaces_section.dart';
+
+/// 킷 갤러리 — 톤 · 다크를 바꿔 가며 표준 위젯(테마만)과 킷 컴포넌트를 상태별로 본다.
 ///
-/// 킷 컴포넌트가 추가될 때마다 섹션을 붙인다.
+/// 컴포넌트가 추가되면 `sections/` 에 섹션을 하나 더하고 아래 목록에 붙인다.
 void main() => runApp(const GalleryApp());
 
 const _brands = <String, Color>{
@@ -111,7 +117,7 @@ class _GalleryPage extends StatelessWidget {
             Text('Body text — the default Text style.', style: text.bodyMedium),
             Text('Caption', style: text.bodySmall),
           ]),
-          section('Buttons', [
+          section('Material buttons (theme only)', [
             Wrap(
               spacing: 8,
               runSpacing: 8,
@@ -131,7 +137,7 @@ class _GalleryPage extends StatelessWidget {
               ],
             ),
           ]),
-          section('Inputs', [
+          section('Material inputs (theme only)', [
             const TextField(
               decoration: InputDecoration(hintText: 'Type an answer'),
             ),
@@ -149,7 +155,7 @@ class _GalleryPage extends StatelessWidget {
             ),
             const LinearProgressIndicator(value: 0.3),
           ]),
-          section('Overlays', [
+          section('Material overlays (theme only)', [
             Wrap(
               spacing: 8,
               runSpacing: 8,
@@ -197,6 +203,11 @@ class _GalleryPage extends StatelessWidget {
               ],
             ),
           ]),
+          section('AButton', buttonsSection(context)),
+          section('Surfaces · lists', surfacesSection(context)),
+          section('Display · selection · feedback', displaySection(context)),
+          section('Navigation · layout', navigationSection(context)),
+          section('Overlays · bars · scroll', overlaysSection(context)),
         ],
       ),
     );

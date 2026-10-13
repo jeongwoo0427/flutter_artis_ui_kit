@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.0.0
+
+새 디자인 시스템의 첫 안정판 — 테마 빌더(0.2.0) 위에 컴포넌트 24개.
+
+- **버튼 · 면 · 목록:** `AButton`(+`.tonal` `.neutral` `.danger` `.text`, `AButtonSize`, `isLoading`) · `ACard` · `ASectionCard` · `ASectionHeader` ·
+  `AListRow` · `AKeyValueRow` · `AStatGroup`/`AStat`
+- **표시 · 선택 · 피드백:** `ATag`(+`.primary`) · `AEmojiTile`(+`.icon`) · `AOptionTile`(+`.numbered`, `AOptionState`) · `APickCard` · `AEmptyState`(+`.inline`) · `ASkeleton`(+`.circle`)
+- **내비게이션 · 레이아웃:** `AFloatingNavigationBar`(표준 `NavigationDestination`) · `AAdaptiveNavigation`(넓은 창에서 `NavigationRail`) · `ATitleTabs` · `ABreadcrumb` ·
+  `AWindowSize`(+`context.windowSize`) · `AContentWidth`
+- **오버레이 · 바 · 스크롤:** `showABottomSheet`/`ABottomSheetScaffold` · `showAActionSheet`/`AActionSheetItem` (루트 내비게이터가 기본) · `ADialog` · `showAConfirmDialog` ·
+  `ABottomCta` · `ASelectionBar`/`ASelectionBarAction` · `APaginatedListView` · `ALoadMoreIndicator`
+- 위젯 테스트 80건 · 갤러리 앱에 컴포넌트 섹션.
+- 옛 위젯은 아직 `legacy.dart` 에 있다(2.0.0 에서 삭제).
+
 ## 0.2.0
 
 토큰과 테마 빌더 — 톤 하나로 앱 전체 `ThemeData` 를 만든다.

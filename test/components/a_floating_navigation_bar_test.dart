@@ -1,0 +1,102 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_artis_ui_kit/flutter_artis_ui_kit.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+const _destinations = [
+  NavigationDestination(icon: Icon(Icons.home_rounded), label: 'Home'),
+  NavigationDestination(icon: Icon(Icons.question_mark), label: 'Bank'),
+  NavigationDestination(icon: Icon(Icons.quiz), label: 'Quiz'),
+];
+
+Widget _app({required int selected, ValueChanged<int>? onSelected}) {
+  return MaterialApp(
+    theme: AThemeBuilder.light(tone: ATone.fromBrand(const Color(0xFF3182F6))),
+    home: Scaffold(
+      extendBody: true,
+      bottomNavigationBar: AFloatingNavigationBar(
+        destinations: _destinations,
+        selectedIndex: selected,
+        onDestinationSelected: onSelected,
+      ),
+    ),
+  );
+}
+
+double _cursorStart(WidgetTester tester) => tester
+    .widget<AnimatedPositionedDirectional>(
+      find.byType(AnimatedPositionedDirectional),
+    )
+    .start!;
+
+void main() {
+  testWidgets('renders labels and reports taps, including the selected one', (
+    tester,
+  ) async {
+    final taps = <int>[];
+    await tester.pumpWidget(_app(selected: 0, onSelected: taps.add));
+
+    expect(find.text('Home'), findsOneWidget);
+    expect(find.text('Bank'), findsOneWidget);
+    expect(find.text('Quiz'), findsOneWidget);
+
+    await tester.tap(find.text('Quiz'));
+    await tester.tap(find.text('Home'));
+    expect(taps, [2, 0]);
+  });
+
+  testWidgets('selected item exposes selected button semantics', (
+    tester,
+  ) async {
+    final handle = tester.ensureSemantics();
+    await tester.pumpWidget(_app(selected: 1, onSelected: (_) {}));
+
+    expect(
+      tester.getSemantics(find.text('Bank')),
+      isSemantics(
+        label: 'Bank',
+        isButton: true,
+        isSelected: true,
+        hasSelectedState: true,
+        isEnabled: true,
+        hasEnabledState: true,
+        hasTapAction: true,
+        isFocusable: true,
+        hasFocusAction: true,
+      ),
+    );
+    expect(
+      tester.getSemantics(find.text('Home')),
+      isSemantics(label: 'Home', isButton: true, isSelected: false),
+    );
+    handle.dispose();
+  });
+
+  testWidgets('tap target is at least 48 high', (tester) async {
+    await tester.pumpWidget(_app(selected: 0, onSelected: (_) {}));
+    final size = tester.getSize(find.byType(InkWell).first);
+    expect(size.height, greaterThanOrEqualTo(48));
+    expect(size.width, 64);
+
+    // 지금 앱과 같은 알약 크기: 항목 3 × 64 + 사이 2 × 1 + 좌우 20 × 2, 높이 66.
+    final pill = find.descendant(
+      of: find.byType(AFloatingNavigationBar),
+      matching: find.byType(DecoratedBox),
+    );
+    expect(tester.getSize(pill.first), const Size(3 * 64 + 2 + 40, 66));
+    expect(AFloatingNavigationBar.height, 66);
+  });
+
+  testWidgets('cursor moves to the selected item', (tester) async {
+    await tester.pumpWidget(_app(selected: 0));
+    final first = _cursorStart(tester);
+    await tester.pumpWidget(_app(selected: 2));
+    await tester.pumpAndSettle();
+    expect(_cursorStart(tester) - first, 2 * (64 + 1));
+  });
+
+  testWidgets('null callback disables items', (tester) async {
+    await tester.pumpWidget(_app(selected: 0));
+    final ink = tester.widget<InkWell>(find.byType(InkWell).first);
+    expect(ink.onTap, isNull);
+  });
+}

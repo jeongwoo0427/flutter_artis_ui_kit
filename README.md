@@ -4,7 +4,7 @@ Flutter Material 위에 얹는 **간결한 디자인 시스템**이다.
 톤(브랜드 색) 하나를 넘기면 앱 전체 테마가 만들어지고, 표준 위젯은 그 테마로 모양이 맞춰진다.
 표준에 없는 부품만 `A` 접두사 위젯으로 제공한다.
 
-> **상태: 0.2.0 — 토큰 · 테마 빌더.** 컴포넌트는 1.0.0 에서 나온다.
+> **상태: 1.0.0** — 테마 빌더 + 컴포넌트 24개.
 > 1.0 이전 위젯은 `legacy.dart` 로 옮겨 두었다(아래 "옛 위젯").
 
 ## 원칙
@@ -72,6 +72,26 @@ MaterialApp(
 - 킷 토큰은 `AThemeData.of(context)` — `page` · `card` · `sunken` · `brand` · `semantic` · `radii` · `spacing` · `motion`.
 - 표준 위젯(`FilledButton` · `TextField` · `SearchBar` · `showModalBottomSheet` · `SnackBar` …)은 따로 스타일을 주지 않아도 킷 모양이 된다.
 - 앱 전용 색은 앱이 `ThemeExtension` 을 하나 더 만들어 `theme.copyWith(extensions: [...])` 로 붙인다.
+
+## 컴포넌트
+
+표준 위젯으로 되는 것(`TextField` · `SearchBar` · `Checkbox` · `Switch` · `IconButton` · `PopupMenuButton` · `SnackBar` · `NavigationRail` · `CircleAvatar` · `TreeSliver` …)은
+킷 위젯이 없다 — 테마만으로 모양이 맞는다. 킷 위젯은 표준에 없는 것만이다.
+
+| 영역 | 위젯 |
+|---|---|
+| 버튼 | `AButton` · `.tonal` · `.neutral` · `.danger` · `.text` — 크기 `AButtonSize.large/medium/small`, `isLoading`, `icon` |
+| 면 | `ACard`(탭 · 눌림 축소) · `ASectionCard`(제목 · 개수 · 링크) · `ASectionHeader`(page · group · field) |
+| 목록 | `AListRow` · `AKeyValueRow` · `AStatGroup` · `APaginatedListView` · `ALoadMoreIndicator` |
+| 선택 | `AOptionTile`(idle · selected · positive · negative, `.numbered`) · `APickCard` |
+| 표시 | `ATag` · `AEmojiTile` |
+| 피드백 | `AEmptyState`(`.inline`) · `ASkeleton` |
+| 내비게이션 | `AFloatingNavigationBar` · `AAdaptiveNavigation` · `ATitleTabs` · `ABreadcrumb` |
+| 오버레이 | `showABottomSheet` · `ABottomSheetScaffold` · `showAActionSheet` · `ADialog` · `showAConfirmDialog` |
+| 바 | `ABottomCta` · `ASelectionBar` |
+| 레이아웃 | `AWindowSize`(compact < 600 ≤ medium < 840 ≤ expanded) · `AContentWidth`(reading 640 · list 720 · wide 1040) |
+
+모든 상태는 갤러리(`example/`)에서 톤 · 다크별로 볼 수 있다.
 
 ## 옛 위젯
 
