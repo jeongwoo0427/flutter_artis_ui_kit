@@ -45,6 +45,7 @@ export 'src/feedback/a_skeleton.dart';
 export 'src/overlays/a_bottom_sheet.dart';
 export 'src/overlays/a_dialog.dart';
 // bars
+export 'src/bars/a_app_bar.dart';
 export 'src/bars/a_bottom_bar.dart';
 export 'src/bars/a_selection_bar.dart';
 // scroll

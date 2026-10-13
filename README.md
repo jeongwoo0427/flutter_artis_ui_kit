@@ -67,7 +67,7 @@ MaterialApp(
 ```
 
 - 톤이 바꾸는 것은 강조색 계열뿐이다. 회색(`ANeutrals`)과 의미색(`ASemanticColors`)은 고정이고 필요하면 빌더 파라미터로 바꾼다.
-- 킷 토큰은 `AThemeData.of(context)` — `page` · `card` · `sunken` · `brand` · `semantic` · `radii` · `spacing` · `motion`.
+- 킷 토큰은 `AThemeData.of(context)` — `page` · `card` · `sunken` · `brand` · `semantic` · `radii` · `spacing` · `motion` · `glass`(떠 있는 바의 유리 면).
 - 표준 위젯(`FilledButton` · `TextField` · `SearchBar` · `showModalBottomSheet` · `SnackBar` …)은 따로 스타일을 주지 않아도 킷 모양이 된다.
 - 앱 전용 색은 앱이 `ThemeExtension` 을 하나 더 만들어 `theme.copyWith(extensions: [...])` 로 붙인다.
 
@@ -84,7 +84,7 @@ MaterialApp(
 | 선택 | `AOptionTile`(idle · selected · positive · negative, `.numbered`) · `APickCard` |
 | 표시 | `ATag` · `AEmojiTile` |
 | 피드백 | `AEmptyState`(`.inline`) · `ASkeleton` |
-| 내비게이션 | `AFloatingNavigationBar` · `AAdaptiveNavigation` · `ATitleTabs` · `ABreadcrumb` |
+| 내비게이션 | `AFloatingNavigationBar` · `AAdaptiveNavigation` · `AAppBar` · `ATitleTabs` · `ABreadcrumb` |
 | 오버레이 | `showABottomSheet` · `ABottomSheetScaffold` · `showAActionSheet` · `ADialog` · `showAConfirmDialog` |
 | 바 | `ABottomBar`(+`ABottomBarEdge` 선 · 페이드 · 없음, 면 색) · `ASelectionBar`(`ABottomBar` 위의 아이콘 동작 + 주 버튼) |
 | 레이아웃 | `AWindowSize`(compact < 600 ≤ medium < 840 ≤ expanded) · `AContentWidth`(reading 640 · list 720 · wide 1040) |

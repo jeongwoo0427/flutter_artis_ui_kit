@@ -18,7 +18,7 @@ Widget _app({
   required int selected,
   ValueChanged<int>? onSelected,
   Color? backgroundColor,
-  double blurSigma = 18,
+  AGlass? glass,
 }) {
   return MaterialApp(
     theme: _theme,
@@ -29,7 +29,7 @@ Widget _app({
         selectedIndex: selected,
         onDestinationSelected: onSelected,
         backgroundColor: backgroundColor,
-        blurSigma: blurSigma,
+        glass: glass,
       ),
     ),
   );
@@ -126,29 +126,40 @@ void main() {
     expect(ink.onTap, isNull);
   });
 
-  testWidgets('glass by default — translucent card and a backdrop blur', (
+  testWidgets('glass by default — the theme glass on the card color', (
     tester,
   ) async {
     await tester.pumpWidget(_app(selected: 0));
-    final card = _theme.extension<AThemeData>()!.card;
-    expect(_pillDecoration(tester).color, card.withValues(alpha: 0.72));
+    final a = _theme.extension<AThemeData>()!;
+    expect(
+      _pillDecoration(tester).color,
+      a.card.withValues(alpha: a.glass.opacity),
+    );
     final filter = tester.widget<BackdropFilter>(find.byType(BackdropFilter));
-    expect(filter.filter, ImageFilter.blur(sigmaX: 18, sigmaY: 18));
+    expect(
+      filter.filter,
+      ImageFilter.blur(sigmaX: a.glass.blurSigma, sigmaY: a.glass.blurSigma),
+    );
   });
 
-  testWidgets('color and blur are customizable; 0 turns the blur off', (
+  testWidgets('color and glass are customizable; AGlass.none is opaque', (
     tester,
   ) async {
     await tester.pumpWidget(
-      _app(selected: 0, backgroundColor: Colors.amber, blurSigma: 6),
+      _app(
+        selected: 0,
+        backgroundColor: Colors.amber,
+        glass: const AGlass(opacity: 0.5, blurSigma: 6),
+      ),
     );
-    expect(_pillDecoration(tester).color, Colors.amber);
+    expect(_pillDecoration(tester).color, Colors.amber.withValues(alpha: 0.5));
     expect(
       tester.widget<BackdropFilter>(find.byType(BackdropFilter)).filter,
       ImageFilter.blur(sigmaX: 6, sigmaY: 6),
     );
 
-    await tester.pumpWidget(_app(selected: 0, blurSigma: 0));
+    await tester.pumpWidget(_app(selected: 0, glass: AGlass.none));
     expect(find.byType(BackdropFilter), findsNothing);
+    expect(_pillDecoration(tester).color, _theme.extension<AThemeData>()!.card);
   });
 }

@@ -107,3 +107,32 @@ class AMotion {
   /// 화면 가장자리의 바가 들고 나는 것처럼 멀리 움직이는 전환.
   final Duration long;
 }
+
+/// 유리 면 — 하단 탭(`AFloatingNavigationBar`) · 상단 바(`AAppBar`)처럼 내용 위에 떠 있는 바가
+/// 반투명 면 뒤로 지나가는 내용을 흐려 비치게 하는 값. 두 바가 같은 값을 쓴다.
+///
+/// [opacity] 가 낮을수록, [blurSigma] 가 작을수록 뒤 내용이 더 잘 보인다.
+class AGlass {
+  /// 기본값.
+  const AGlass({this.opacity = 0.64, this.blurSigma = 12})
+    : assert(0 <= opacity && opacity <= 1),
+      assert(blurSigma >= 0);
+
+  /// 유리를 끈다 — 불투명한 면, 흐림 없음(흐림이 부담스러운 기기용).
+  static const AGlass none = AGlass(opacity: 1, blurSigma: 0);
+
+  /// 면 색에 곱하는 불투명도. `1` 이면 뒤가 보이지 않는다.
+  final double opacity;
+
+  /// 뒤 내용을 흐리는 정도(가우시안 sigma). `0` 이면 흐리지 않는다.
+  final double blurSigma;
+
+  @override
+  bool operator ==(Object other) =>
+      other is AGlass &&
+      other.opacity == opacity &&
+      other.blurSigma == blurSigma;
+
+  @override
+  int get hashCode => Object.hash(opacity, blurSigma);
+}

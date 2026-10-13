@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../foundation/a_palette.dart';
 import '../foundation/a_tokens.dart';
 
-/// 킷 위젯이 `ColorScheme` · `TextTheme` 말고 읽는 값 — 면 · 브랜드 · 의미색 · 모서리 · 간격 · 움직임.
+/// 킷 위젯이 `ColorScheme` · `TextTheme` 말고 읽는 값 — 면 · 브랜드 · 의미색 · 모서리 · 간격 · 움직임 · 유리.
 ///
 /// [AThemeBuilder] 가 채운다. 직접 만든 `ThemeData` 에 이 확장이 없으면 [of] 가 `ColorScheme` 에서 기본값을 만든다.
 /// 서브트리만 바꾸려면 `Theme(data: Theme.of(context).copyWith(extensions: [...]))` 를 쓴다.
@@ -20,6 +20,7 @@ class AThemeData extends ThemeExtension<AThemeData> {
     this.radii = const ARadii(),
     this.spacing = const ASpacing(),
     this.motion = const AMotion(),
+    this.glass = const AGlass(),
   });
 
   /// `ColorScheme` 만 있는 테마에서 쓰는 기본값.
@@ -69,6 +70,9 @@ class AThemeData extends ThemeExtension<AThemeData> {
   /// 움직임.
   final AMotion motion;
 
+  /// 떠 있는 바(하단 탭 · 상단 바)의 유리 면.
+  final AGlass glass;
+
   @override
   AThemeData copyWith({
     Color? page,
@@ -80,6 +84,7 @@ class AThemeData extends ThemeExtension<AThemeData> {
     ARadii? radii,
     ASpacing? spacing,
     AMotion? motion,
+    AGlass? glass,
   }) {
     return AThemeData(
       page: page ?? this.page,
@@ -91,6 +96,7 @@ class AThemeData extends ThemeExtension<AThemeData> {
       radii: radii ?? this.radii,
       spacing: spacing ?? this.spacing,
       motion: motion ?? this.motion,
+      glass: glass ?? this.glass,
     );
   }
 
@@ -108,6 +114,7 @@ class AThemeData extends ThemeExtension<AThemeData> {
       radii: t < 0.5 ? radii : other.radii,
       spacing: t < 0.5 ? spacing : other.spacing,
       motion: t < 0.5 ? motion : other.motion,
+      glass: t < 0.5 ? glass : other.glass,
     );
   }
 }

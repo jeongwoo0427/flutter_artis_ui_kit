@@ -27,7 +27,8 @@ abstract final class AThemeBuilder {
     String? fontFamily,
     ANeutrals neutrals = ANeutrals.light,
     ASemanticColors semantic = ASemanticColors.light,
-  }) => _build(Brightness.light, tone, fontFamily, neutrals, semantic);
+    AGlass glass = const AGlass(),
+  }) => _build(Brightness.light, tone, fontFamily, neutrals, semantic, glass);
 
   /// 다크 테마.
   static ThemeData dark({
@@ -35,7 +36,8 @@ abstract final class AThemeBuilder {
     String? fontFamily,
     ANeutrals neutrals = ANeutrals.dark,
     ASemanticColors semantic = ASemanticColors.dark,
-  }) => _build(Brightness.dark, tone, fontFamily, neutrals, semantic);
+    AGlass glass = const AGlass(),
+  }) => _build(Brightness.dark, tone, fontFamily, neutrals, semantic, glass);
 
   static ThemeData _build(
     Brightness brightness,
@@ -43,6 +45,7 @@ abstract final class AThemeBuilder {
     String? fontFamily,
     ANeutrals n,
     ASemanticColors semantic,
+    AGlass glass,
   ) {
     final isDark = brightness == Brightness.dark;
     const radii = ARadii();
@@ -263,6 +266,7 @@ abstract final class AThemeBuilder {
           textTertiary: n.textTertiary,
           semantic: semantic,
           radii: radii,
+          glass: glass,
         ),
       ],
     );

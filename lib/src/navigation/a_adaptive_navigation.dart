@@ -27,8 +27,6 @@ class AAdaptiveNavigation extends StatelessWidget {
     this.onDestinationSelected,
     required this.body,
     this.navigationVisible = true,
-    this.navigationBackgroundColor,
-    this.navigationBlurSigma = 18,
   });
 
   /// 탭 항목.
@@ -47,12 +45,6 @@ class AAdaptiveNavigation extends StatelessWidget {
   /// (선택 모드처럼 그 자리에 다른 바를 올릴 때). 넓은 창의 레일은 늘 보인다.
   final bool navigationVisible;
 
-  /// 좁은 창의 하단 탭 면 색 — [AFloatingNavigationBar.backgroundColor].
-  final Color? navigationBackgroundColor;
-
-  /// 좁은 창의 하단 탭 뒤 흐림 — [AFloatingNavigationBar.blurSigma].
-  final double navigationBlurSigma;
-
   @override
   Widget build(BuildContext context) {
     if (context.windowSize != AWindowSize.expanded) {
@@ -70,8 +62,6 @@ class AAdaptiveNavigation extends StatelessWidget {
               destinations: destinations,
               selectedIndex: selectedIndex,
               onDestinationSelected: onDestinationSelected,
-              backgroundColor: navigationBackgroundColor,
-              blurSigma: navigationBlurSigma,
             ),
           ),
         ),

@@ -1,7 +1,7 @@
-import 'dart:ui' show ImageFilter;
-
 import 'package:flutter/material.dart';
 
+import '../foundation/a_tokens.dart';
+import '../surfaces/glass_surface.dart';
 import '../theme/a_theme_data.dart';
 
 // 알약 치수 — 지금 앱의 하단 탭과 같은 값(DESIGN_RENEWAL_TASK §4A.5).
@@ -16,16 +16,15 @@ const double _paddingBottom = 8;
 const double _paddingHorizontal = 20;
 const double _cursorSize = 5;
 const double _bottomMargin = 16;
-const double _defaultOpacity = 0.72;
 
 /// 화면 아래에 떠 있는 알약 모양 하단 탭. API 는 Material [NavigationBar] 와 같다.
 ///
 /// 선택한 항목 위에 작은 점 커서가 움직인다. 이미 선택된 항목을 눌러도
 /// [onDestinationSelected] 가 같은 index 로 불린다(맨 위로 · 루트로 처리용).
 ///
-/// 알약은 **유리처럼** 그린다 — 반투명 면([backgroundColor]) 뒤로 지나가는 내용을
-/// [blurSigma] 만큼 흐려서, 어떤 내용 위에서도 탭이 떠 보이고 뒤 글자와 섞이지 않는다.
-/// 흐림이 부담스러운 기기에서는 `blurSigma: 0` 과 불투명한 [backgroundColor] 를 함께 준다.
+/// 알약은 **유리처럼** 그린다 — 반투명 면 뒤로 지나가는 내용을 흐려서, 어떤 내용 위에서도
+/// 탭이 떠 보이고 뒤 글자와 섞이지 않는다. 불투명도 · 흐림은 테마의 [AThemeData.glass] 로
+/// `AAppBar` 와 함께 정하고, 이 바만 다르게 하려면 [glass] 를 준다(끄려면 [AGlass.none]).
 ///
 /// 본문이 알약 뒤까지 이어지게 `Scaffold(extendBody: true)` 의 `bottomNavigationBar` 에 두고,
 /// 본문 아래 여백은 `MediaQuery.paddingOf(context).bottom` 을 쓴다.
@@ -52,9 +51,8 @@ class AFloatingNavigationBar extends StatelessWidget {
     required this.selectedIndex,
     this.onDestinationSelected,
     this.backgroundColor,
-    this.blurSigma = 18,
+    this.glass,
   }) : assert(destinations.length >= 2),
-       assert(blurSigma >= 0),
        assert(0 <= selectedIndex && selectedIndex < destinations.length);
 
   /// 알약 자체의 높이(바닥 여백 · 안전 영역 제외). 여백을 직접 계산해야 할 때만 쓴다.
@@ -75,12 +73,11 @@ class AFloatingNavigationBar extends StatelessWidget {
   /// 항목을 눌렀을 때. `null` 이면 모든 항목이 비활성.
   final ValueChanged<int>? onDestinationSelected;
 
-  /// 알약 면 색. 투명도가 있으면 뒤 내용이 흐려져 비친다.
-  /// `null` 이면 카드색(다크는 한 단계 밝은 면)의 72%.
+  /// 알약 면 색 — [glass] 의 불투명도가 곱해진다. `null` 이면 카드색(다크는 한 단계 밝은 면).
   final Color? backgroundColor;
 
-  /// 뒤 내용을 흐리는 정도(가우시안 sigma). 클수록 더 뿌옇다. `0` 이면 흐리지 않는다.
-  final double blurSigma;
+  /// 유리 면 값. `null` 이면 테마의 [AThemeData.glass].
+  final AGlass? glass;
 
   @override
   Widget build(BuildContext context) {
@@ -89,8 +86,7 @@ class AFloatingNavigationBar extends StatelessWidget {
     final a = AThemeData.of(context);
     final background =
         backgroundColor ??
-        (theme.brightness == Brightness.dark ? cs.surfaceContainer : a.card)
-            .withValues(alpha: _defaultOpacity);
+        (theme.brightness == Brightness.dark ? cs.surfaceContainer : a.card);
     final shape = BorderRadius.circular(a.radii.full);
     final duration = MediaQuery.disableAnimationsOf(context)
         ? Duration.zero
@@ -112,62 +108,54 @@ class AFloatingNavigationBar extends StatelessWidget {
                 offset: const Offset(0, 10),
               ),
             ),
-            child: ClipRRect(
+            child: GlassSurface(
+              color: background,
+              glass: glass ?? a.glass,
               borderRadius: shape,
-              child: _blur(
-                DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: background,
-                    borderRadius: shape,
-                    border: Border.all(
-                      color: cs.onSurface.withValues(alpha: 0.08),
-                    ),
+              border: Border.all(color: cs.onSurface.withValues(alpha: 0.08)),
+              child: Material(
+                type: MaterialType.transparency,
+                child: Padding(
+                  padding: const EdgeInsetsDirectional.symmetric(
+                    horizontal: _paddingHorizontal,
                   ),
-                  child: Material(
-                    type: MaterialType.transparency,
-                    child: Padding(
-                      padding: const EdgeInsetsDirectional.symmetric(
-                        horizontal: _paddingHorizontal,
-                      ),
-                      child: Stack(
+                  child: Stack(
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        spacing: _itemSpacing,
                         children: [
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            spacing: _itemSpacing,
-                            children: [
-                              for (var i = 0; i < destinations.length; i++)
-                                _Item(
-                                  destination: destinations[i],
-                                  selected: i == selectedIndex,
-                                  onTap:
-                                      onDestinationSelected == null ||
-                                          !destinations[i].enabled
-                                      ? null
-                                      : () => onDestinationSelected!(i),
-                                ),
-                            ],
-                          ),
-                          AnimatedPositionedDirectional(
-                            duration: duration,
-                            curve: Curves.easeInOut,
-                            top: _paddingTop,
-                            start:
-                                selectedIndex * (_itemWidth + _itemSpacing) +
-                                (_itemWidth - _cursorSize) / 2,
-                            width: _cursorSize,
-                            height: _cursorSize,
-                            child: IgnorePointer(
-                              child: DecoratedBox(
-                                decoration: BoxDecoration(
-                                  color: cs.primary,
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
+                          for (var i = 0; i < destinations.length; i++)
+                            _Item(
+                              destination: destinations[i],
+                              selected: i == selectedIndex,
+                              onTap:
+                                  onDestinationSelected == null ||
+                                      !destinations[i].enabled
+                                  ? null
+                                  : () => onDestinationSelected!(i),
                             ),
-                          ),
                         ],
                       ),
-                    ),
+                      AnimatedPositionedDirectional(
+                        duration: duration,
+                        curve: Curves.easeInOut,
+                        top: _paddingTop,
+                        start:
+                            selectedIndex * (_itemWidth + _itemSpacing) +
+                            (_itemWidth - _cursorSize) / 2,
+                        width: _cursorSize,
+                        height: _cursorSize,
+                        child: IgnorePointer(
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              color: cs.primary,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -177,13 +165,6 @@ class AFloatingNavigationBar extends StatelessWidget {
       ),
     );
   }
-
-  Widget _blur(Widget child) => blurSigma == 0
-      ? child
-      : BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: blurSigma, sigmaY: blurSigma),
-          child: child,
-        );
 }
 
 /// [borderRadius] 모양 바깥에만 [shadow] 를 그린다.

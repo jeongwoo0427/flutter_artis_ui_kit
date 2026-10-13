@@ -1,5 +1,13 @@
 # Changelog
 
+## 4.0.0
+
+- **`AAppBar`** — 유리처럼 그리는 상단 바. Material `AppBar` 자리에 같은 이름의 인자(`title` · `leading` · `actions` · `bottom` · `centerTitle` · `titleSpacing` · `leadingWidth` · `backgroundColor` · `foregroundColor`)로 쓴다.
+  `Scaffold(extendBodyBehindAppBar: true)` 면 바 뒤로 지나가는 내용이 흐려져 비친다. 바가 투명이라 상태 표시줄 글자색은 면 색 기준으로 정한다.
+- **`AGlass`** 토큰(`opacity` · `blurSigma`, 끄기 `AGlass.none`) — `AThemeData.glass` · `AThemeBuilder.light/dark(glass:)`. 하단 탭과 상단 바가 **같은 값**을 읽는다.
+  기본값은 3.3.0 보다 뒤가 더 비치게: 불투명도 72% → **64%**, 흐림 18 → **12**.
+- **깨지는 변경:** `AFloatingNavigationBar.blurSigma` → `glass`(`AGlass?`, 기본 테마 값). `backgroundColor` 는 이제 불투명도가 곱해지는 바탕색. `AAdaptiveNavigation` 의 `navigationBackgroundColor` · `navigationBlurSigma`(3.3.0) 삭제 — 테마로 정한다.
+
 ## 3.3.0
 
 - `AFloatingNavigationBar`: 알약을 **유리처럼** — 반투명 면 뒤로 지나가는 내용을 흐린다(`BackdropFilter`). 흰 카드 · 글자 위에서도 탭이 떠 보이고 뒤 글자와 섞이지 않는다.
