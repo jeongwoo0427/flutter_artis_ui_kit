@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.1.0
+
+- `AListRow`: 잉크 · 선택 면이 콘텐츠보다 좌우로 `spacing.md` 만큼 넓게 번지고(콘텐츠 자리는 그대로), 행마다 위아래 2 의 틈을 둬서 이어서 선택한 행이 한 덩어리로 붙지 않는다. 행 높이는 그대로(최소 56).
+- `AAdaptiveNavigation.navigationVisible`: `false` 면 좁은 창의 하단 탭이 아래로 미끄러져 숨는다(선택 모드에서 그 자리에 다른 바를 올릴 때).
+
 ## 2.0.0
 
 - **깨지는 변경:** 1.0 이전 옛 위젯(`legacy.dart` — 옛 `AButton` · `ACard` · `ACardButton` · `AWell` · `ATextFormField` · `APopupMenuButton` · `ABottomNavigationBar` · `ASampleText`)을 삭제했다.

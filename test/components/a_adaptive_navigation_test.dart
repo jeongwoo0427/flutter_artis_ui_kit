@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_artis_ui_kit/flutter_artis_ui_kit.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-Future<void> _pump(WidgetTester tester, double width) async {
+Future<void> _pump(
+  WidgetTester tester,
+  double width, {
+  bool visible = true,
+}) async {
   tester.view.devicePixelRatio = 1;
   tester.view.physicalSize = Size(width, 800);
   addTearDown(tester.view.reset);
@@ -19,6 +23,7 @@ Future<void> _pump(WidgetTester tester, double width) async {
         selectedIndex: 0,
         onDestinationSelected: (_) {},
         body: const Text('body'),
+        navigationVisible: visible,
       ),
     ),
   );
@@ -37,5 +42,21 @@ void main() {
     expect(find.byType(NavigationRail), findsOneWidget);
     expect(find.byType(AFloatingNavigationBar), findsNothing);
     expect(find.text('body'), findsOneWidget);
+  });
+
+  testWidgets('hidden bar slides down and ignores taps', (tester) async {
+    await _pump(tester, 400, visible: false);
+    await tester.pumpAndSettle();
+    final slide = tester.widget<AnimatedSlide>(find.byType(AnimatedSlide));
+    expect(slide.offset.dy, greaterThan(1));
+    final ignore = tester.widget<IgnorePointer>(
+      find
+          .ancestor(
+            of: find.byType(AFloatingNavigationBar),
+            matching: find.byType(IgnorePointer),
+          )
+          .first,
+    );
+    expect(ignore.ignoring, isTrue);
   });
 }

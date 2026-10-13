@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show OverflowBoxFit;
 
 import '../theme/a_theme_data.dart';
 
 const double _minHeight = 56;
-const double _verticalPadding = 11;
+const double _verticalPadding = 9;
+
+/// 행끼리 띄우는 위아래 틈 — 선택된 행이 이어져도 면이 한 덩어리로 붙지 않는다.
+const double _gap = 2;
 
 /// 목록 한 줄 — 앞(이모지 타일 등) · 제목(2줄) · 부제 · 끝 값 · 화살표.
 ///
@@ -65,8 +69,10 @@ class AListRow extends StatelessWidget {
     final radius = BorderRadius.circular(a.radii.md);
     final tertiary = TextStyle(color: a.textTertiary);
 
+    // 잉크 · 선택 면이 콘텐츠보다 좌우로 [bleed] 만큼 넓게 번진다 — 콘텐츠 자리는 그대로.
+    final bleed = a.spacing.md;
     final row = ConstrainedBox(
-      constraints: const BoxConstraints(minHeight: _minHeight),
+      constraints: const BoxConstraints(minHeight: _minHeight - _gap * 2),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: _verticalPadding),
         child: Row(
@@ -106,45 +112,41 @@ class AListRow extends StatelessWidget {
       ),
     );
 
+    final surface = Material(
+      color: selected ? cs.primaryContainer : Colors.transparent,
+      borderRadius: radius,
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        onLongPress: onLongPress,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: bleed),
+          child: row,
+        ),
+      ),
+    );
+
     return MergeSemantics(
       child: Semantics(
         selected: selected,
         button: onTap != null,
-        child: CustomPaint(
-          painter: selected
-              ? _BleedPainter(cs.primaryContainer, radius, a.spacing.md)
-              : null,
-          // 잉크가 선택 면 위에 그려지도록 투명 Material 을 한 겹 둔다.
-          child: Material(
-            type: MaterialType.transparency,
-            child: InkWell(
-              onTap: onTap,
-              onLongPress: onLongPress,
-              borderRadius: radius,
-              child: row,
-            ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: _gap),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              // 폭이 정해지지 않은 곳(가로 스크롤 등)에서는 번지지 않는다.
+              if (!constraints.hasBoundedWidth) return surface;
+              final width = constraints.maxWidth + bleed * 2;
+              return OverflowBox(
+                minWidth: width,
+                maxWidth: width,
+                fit: OverflowBoxFit.deferToChild,
+                child: surface,
+              );
+            },
           ),
         ),
       ),
     );
   }
-}
-
-/// 행 좌우로 [bleed] 만큼 번지는 둥근 면.
-class _BleedPainter extends CustomPainter {
-  const _BleedPainter(this.color, this.radius, this.bleed);
-
-  final Color color;
-  final BorderRadius radius;
-  final double bleed;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final rect = Rect.fromLTRB(-bleed, 0, size.width + bleed, size.height);
-    canvas.drawRRect(radius.toRRect(rect), Paint()..color = color);
-  }
-
-  @override
-  bool shouldRepaint(_BleedPainter old) =>
-      old.color != color || old.radius != radius || old.bleed != bleed;
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../theme/a_theme_data.dart';
+
 import '../layout/a_window_size.dart';
 import 'a_floating_navigation_bar.dart';
 
@@ -24,6 +26,7 @@ class AAdaptiveNavigation extends StatelessWidget {
     required this.selectedIndex,
     this.onDestinationSelected,
     required this.body,
+    this.navigationVisible = true,
   });
 
   /// 탭 항목.
@@ -38,16 +41,28 @@ class AAdaptiveNavigation extends StatelessWidget {
   /// 본문.
   final Widget body;
 
+  /// 좁은 창의 하단 탭을 보일지. `false` 면 아래로 미끄러져 내려가 숨는다
+  /// (선택 모드처럼 그 자리에 다른 바를 올릴 때). 넓은 창의 레일은 늘 보인다.
+  final bool navigationVisible;
+
   @override
   Widget build(BuildContext context) {
     if (context.windowSize != AWindowSize.expanded) {
       return Scaffold(
         extendBody: true,
         body: body,
-        bottomNavigationBar: AFloatingNavigationBar(
-          destinations: destinations,
-          selectedIndex: selectedIndex,
-          onDestinationSelected: onDestinationSelected,
+        bottomNavigationBar: IgnorePointer(
+          ignoring: !navigationVisible,
+          child: AnimatedSlide(
+            offset: navigationVisible ? Offset.zero : const Offset(0, 1.6),
+            duration: AThemeData.of(context).motion.medium,
+            curve: Curves.easeOutCubic,
+            child: AFloatingNavigationBar(
+              destinations: destinations,
+              selectedIndex: selectedIndex,
+              onDestinationSelected: onDestinationSelected,
+            ),
+          ),
         ),
       );
     }
