@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.3.0
+
+- `AFloatingNavigationBar`: 알약을 **유리처럼** — 반투명 면 뒤로 지나가는 내용을 흐린다(`BackdropFilter`). 흰 카드 · 글자 위에서도 탭이 떠 보이고 뒤 글자와 섞이지 않는다.
+  면 색 `backgroundColor`(기본: 카드색, 다크는 `surfaceContainer` 의 72%) · 흐림 `blurSigma`(기본 18, `0` 이면 끔)를 고를 수 있다. 옅은 외곽선(onSurface 8%)을 두르고, 그림자는 알약 **바깥에만** 그린다(반투명 면 아래로 비치지 않게).
+  예전 면은 페이지색 불투명이었다 — 되돌리려면 `backgroundColor: page, blurSigma: 0`.
+- `AAdaptiveNavigation`: `navigationBackgroundColor` · `navigationBlurSigma` 로 위 둘을 넘긴다.
+
 ## 3.2.0
 
 - 밝은 테마의 연한 강조 면(`primaryContainer`)을 브랜드색 11% → **16%** 로 — 회색 페이지(`page`) 위에 올린 강조 카드가 페이지와 거의 같아 보이던 것. 톤과 무관하게 브랜드색에서 만들므로 어떤 톤이든 같은 만큼 진해진다.

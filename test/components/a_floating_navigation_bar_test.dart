@@ -1,6 +1,12 @@
+import 'dart:ui' show ImageFilter;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_artis_ui_kit/flutter_artis_ui_kit.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+final _theme = AThemeBuilder.light(
+  tone: ATone.fromBrand(const Color(0xFF3182F6)),
+);
 
 const _destinations = [
   NavigationDestination(icon: Icon(Icons.home_rounded), label: 'Home'),
@@ -8,19 +14,39 @@ const _destinations = [
   NavigationDestination(icon: Icon(Icons.quiz), label: 'Quiz'),
 ];
 
-Widget _app({required int selected, ValueChanged<int>? onSelected}) {
+Widget _app({
+  required int selected,
+  ValueChanged<int>? onSelected,
+  Color? backgroundColor,
+  double blurSigma = 18,
+}) {
   return MaterialApp(
-    theme: AThemeBuilder.light(tone: ATone.fromBrand(const Color(0xFF3182F6))),
+    theme: _theme,
     home: Scaffold(
       extendBody: true,
       bottomNavigationBar: AFloatingNavigationBar(
         destinations: _destinations,
         selectedIndex: selected,
         onDestinationSelected: onSelected,
+        backgroundColor: backgroundColor,
+        blurSigma: blurSigma,
       ),
     ),
   );
 }
+
+BoxDecoration _pillDecoration(WidgetTester tester) =>
+    tester
+            .widget<DecoratedBox>(
+              find
+                  .descendant(
+                    of: find.byType(AFloatingNavigationBar),
+                    matching: find.byType(DecoratedBox),
+                  )
+                  .first,
+            )
+            .decoration
+        as BoxDecoration;
 
 double _cursorStart(WidgetTester tester) => tester
     .widget<AnimatedPositionedDirectional>(
@@ -98,5 +124,31 @@ void main() {
     await tester.pumpWidget(_app(selected: 0));
     final ink = tester.widget<InkWell>(find.byType(InkWell).first);
     expect(ink.onTap, isNull);
+  });
+
+  testWidgets('glass by default — translucent card and a backdrop blur', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_app(selected: 0));
+    final card = _theme.extension<AThemeData>()!.card;
+    expect(_pillDecoration(tester).color, card.withValues(alpha: 0.72));
+    final filter = tester.widget<BackdropFilter>(find.byType(BackdropFilter));
+    expect(filter.filter, ImageFilter.blur(sigmaX: 18, sigmaY: 18));
+  });
+
+  testWidgets('color and blur are customizable; 0 turns the blur off', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _app(selected: 0, backgroundColor: Colors.amber, blurSigma: 6),
+    );
+    expect(_pillDecoration(tester).color, Colors.amber);
+    expect(
+      tester.widget<BackdropFilter>(find.byType(BackdropFilter)).filter,
+      ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+    );
+
+    await tester.pumpWidget(_app(selected: 0, blurSigma: 0));
+    expect(find.byType(BackdropFilter), findsNothing);
   });
 }
