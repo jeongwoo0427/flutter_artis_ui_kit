@@ -4,7 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_artis_ui_kit/flutter_artis_ui_kit.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-const _glass = AGlass(opacity: 0.5, blurSigma: 8);
+const _glass = AGlass(
+  appBarOpacity: 0.7,
+  navigationBarOpacity: 0.5,
+  blurSigma: 8,
+);
 final _theme = AThemeBuilder.light(
   tone: ATone.fromBrand(const Color(0xFF3182F6)),
   glass: _glass,
@@ -41,7 +45,7 @@ void main() {
 
     expect(find.text('Bank'), findsOneWidget);
     final page = _theme.extension<AThemeData>()!.page;
-    expect(_surfaceColor(tester), page.withValues(alpha: 0.5));
+    expect(_surfaceColor(tester), page.withValues(alpha: 0.7));
     expect(
       tester.widget<BackdropFilter>(find.byType(BackdropFilter)).filter,
       ImageFilter.blur(sigmaX: 8, sigmaY: 8),
@@ -75,6 +79,22 @@ void main() {
         .map((f) => f.filter)
         .toSet();
     expect(filters, {ImageFilter.blur(sigmaX: 8, sigmaY: 8)});
+    // 흐림은 같고 불투명도만 바마다 — 상단 바 0.7, 하단 탭 0.5.
+    final a = _theme.extension<AThemeData>()!;
+    expect(_surfaceColor(tester), a.page.withValues(alpha: 0.7));
+    final pill =
+        tester
+                .widget<DecoratedBox>(
+                  find
+                      .descendant(
+                        of: find.byType(AFloatingNavigationBar),
+                        matching: find.byType(DecoratedBox),
+                      )
+                      .first,
+                )
+                .decoration
+            as BoxDecoration;
+    expect(pill.color, a.card.withValues(alpha: 0.5));
   });
 
   testWidgets('bottom row is covered; height includes it', (tester) async {

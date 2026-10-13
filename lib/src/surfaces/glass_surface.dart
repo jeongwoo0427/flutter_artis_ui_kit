@@ -8,7 +8,7 @@ import '../foundation/a_tokens.dart';
 Color glassBorderColor(AGlass glass, ColorScheme cs) =>
     glass.borderColor ?? cs.onSurface.withValues(alpha: 0.08);
 
-/// [glass] 값으로 그리는 유리 면 — [color] 에 `glass.opacity` 를 곱한 반투명 면 뒤로
+/// [glass] 값으로 그리는 유리 면 — [color] 에 [opacity] 를 곱한 반투명 면 뒤로
 /// 지나가는 내용을 `glass.blurSigma` 만큼 흐린다. 흐림은 [borderRadius] 모양(없으면 사각형) 안에서만.
 ///
 /// 킷 내부용 — `AFloatingNavigationBar` · `AAppBar` 가 같은 모양으로 그리려고 나눠 쓴다.
@@ -20,16 +20,20 @@ class GlassSurface extends StatelessWidget {
   const GlassSurface({
     super.key,
     required this.color,
+    required this.opacity,
     required this.glass,
     this.borderRadius,
     this.border,
     required this.child,
   });
 
-  /// 면 색 — `glass.opacity` 가 곱해진다.
+  /// 면 색 — [opacity] 가 곱해진다.
   final Color color;
 
-  /// 불투명도 · 흐림.
+  /// 면 불투명도 — 바마다 `AGlass` 의 해당 값.
+  final double opacity;
+
+  /// 흐림.
   final AGlass glass;
 
   /// 면 · 흐림 모양. `null` 이면 사각형.
@@ -45,7 +49,7 @@ class GlassSurface extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget surface = DecoratedBox(
       decoration: BoxDecoration(
-        color: color.withValues(alpha: color.a * glass.opacity),
+        color: color.withValues(alpha: color.a * opacity),
         borderRadius: borderRadius,
         border: border,
       ),

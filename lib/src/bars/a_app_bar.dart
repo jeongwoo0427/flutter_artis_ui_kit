@@ -163,6 +163,7 @@ class _AAppBarState extends State<AAppBar> {
           ),
       flexibleSpace: GlassSurface(
         color: color,
+        opacity: behind ? glass.appBarOpacity : 1,
         glass: behind ? glass : AGlass.none,
         child: Align(
           alignment: Alignment.bottomCenter,

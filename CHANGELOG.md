@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.0.0
+
+- **깨지는 변경:** `AGlass.opacity` → **`appBarOpacity`**(기본 0.70) · **`navigationBarOpacity`**(기본 0.56). 흐림 · 테두리는 두 바가 같고 불투명도만 바마다 — 상단 바는 조금 더 불투명하게, 하단 탭은 더 비치게(4.x 는 둘 다 0.64).
+
 ## 4.2.0
 
 - `AGlass` 에 테두리 — `borderColor`(기본: 글자색 8%) · `borderWidth`(기본 1, `0` 이면 없음). 하단 탭과 상단 바가 같은 값을 쓴다.

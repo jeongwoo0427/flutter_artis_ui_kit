@@ -111,6 +111,7 @@ class AFloatingNavigationBar extends StatelessWidget {
             ),
             child: GlassSurface(
               color: background,
+              opacity: effectiveGlass.navigationBarOpacity,
               glass: effectiveGlass,
               borderRadius: shape,
               border: effectiveGlass.borderWidth == 0

@@ -133,7 +133,7 @@ void main() {
     final a = _theme.extension<AThemeData>()!;
     expect(
       _pillDecoration(tester).color,
-      a.card.withValues(alpha: a.glass.opacity),
+      a.card.withValues(alpha: a.glass.navigationBarOpacity),
     );
     final filter = tester.widget<BackdropFilter>(find.byType(BackdropFilter));
     expect(
@@ -149,7 +149,7 @@ void main() {
       _app(
         selected: 0,
         backgroundColor: Colors.amber,
-        glass: const AGlass(opacity: 0.5, blurSigma: 6),
+        glass: const AGlass(navigationBarOpacity: 0.5, blurSigma: 6),
       ),
     );
     expect(_pillDecoration(tester).color, Colors.amber.withValues(alpha: 0.5));

@@ -111,26 +111,36 @@ class AMotion {
 }
 
 /// 유리 면 — 하단 탭(`AFloatingNavigationBar`) · 상단 바(`AAppBar`)처럼 내용 위에 떠 있는 바가
-/// 반투명 면 뒤로 지나가는 내용을 흐려 비치게 하는 값과 그 테두리. 두 바가 같은 값을 쓴다.
+/// 반투명 면 뒤로 지나가는 내용을 흐려 비치게 하는 값과 그 테두리. 흐림 · 테두리는 두 바가 같고,
+/// 불투명도만 바마다 따로 둔다(상단 바는 글자가 많은 제목 줄이라 조금 더 불투명하게).
 ///
-/// [opacity] 가 낮을수록, [blurSigma] 가 작을수록 뒤 내용이 더 잘 보인다.
+/// 불투명도가 낮을수록, [blurSigma] 가 작을수록 뒤 내용이 더 잘 보인다.
 /// 테두리는 하단 탭은 늘 알약을 두르고, 상단 바는 내용이 바 밑으로 스크롤됐을 때만 아래에 나타난다.
 class AGlass {
   /// 기본값.
   const AGlass({
-    this.opacity = 0.64,
+    this.appBarOpacity = 0.70,
+    this.navigationBarOpacity = 0.56,
     this.blurSigma = 12,
     this.borderColor,
     this.borderWidth = 1,
-  }) : assert(0 <= opacity && opacity <= 1),
+  }) : assert(0 <= appBarOpacity && appBarOpacity <= 1),
+       assert(0 <= navigationBarOpacity && navigationBarOpacity <= 1),
        assert(blurSigma >= 0),
        assert(borderWidth >= 0);
 
   /// 유리를 끈다 — 불투명한 면, 흐림 없음(흐림이 부담스러운 기기용).
-  static const AGlass none = AGlass(opacity: 1, blurSigma: 0);
+  static const AGlass none = AGlass(
+    appBarOpacity: 1,
+    navigationBarOpacity: 1,
+    blurSigma: 0,
+  );
 
-  /// 면 색에 곱하는 불투명도. `1` 이면 뒤가 보이지 않는다.
-  final double opacity;
+  /// 상단 바(`AAppBar`) 면 색에 곱하는 불투명도. `1` 이면 뒤가 보이지 않는다.
+  final double appBarOpacity;
+
+  /// 하단 탭(`AFloatingNavigationBar`) 면 색에 곱하는 불투명도. `1` 이면 뒤가 보이지 않는다.
+  final double navigationBarOpacity;
 
   /// 뒤 내용을 흐리는 정도(가우시안 sigma). `0` 이면 흐리지 않는다.
   final double blurSigma;
@@ -144,11 +154,18 @@ class AGlass {
   @override
   bool operator ==(Object other) =>
       other is AGlass &&
-      other.opacity == opacity &&
+      other.appBarOpacity == appBarOpacity &&
+      other.navigationBarOpacity == navigationBarOpacity &&
       other.blurSigma == blurSigma &&
       other.borderColor == borderColor &&
       other.borderWidth == borderWidth;
 
   @override
-  int get hashCode => Object.hash(opacity, blurSigma, borderColor, borderWidth);
+  int get hashCode => Object.hash(
+    appBarOpacity,
+    navigationBarOpacity,
+    blurSigma,
+    borderColor,
+    borderWidth,
+  );
 }
