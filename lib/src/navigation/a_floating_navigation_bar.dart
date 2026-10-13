@@ -88,6 +88,7 @@ class AFloatingNavigationBar extends StatelessWidget {
         backgroundColor ??
         (theme.brightness == Brightness.dark ? cs.surfaceContainer : a.card);
     final shape = BorderRadius.circular(a.radii.full);
+    final effectiveGlass = glass ?? a.glass;
     final duration = MediaQuery.disableAnimationsOf(context)
         ? Duration.zero
         : a.motion.medium;
@@ -110,9 +111,14 @@ class AFloatingNavigationBar extends StatelessWidget {
             ),
             child: GlassSurface(
               color: background,
-              glass: glass ?? a.glass,
+              glass: effectiveGlass,
               borderRadius: shape,
-              border: Border.all(color: cs.onSurface.withValues(alpha: 0.08)),
+              border: effectiveGlass.borderWidth == 0
+                  ? null
+                  : Border.all(
+                      color: glassBorderColor(effectiveGlass, cs),
+                      width: effectiveGlass.borderWidth,
+                    ),
               child: Material(
                 type: MaterialType.transparency,
                 child: Padding(

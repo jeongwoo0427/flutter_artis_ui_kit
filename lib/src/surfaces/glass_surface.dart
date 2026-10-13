@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 
 import '../foundation/a_tokens.dart';
 
+/// [glass] 의 테두리 색 — 지정이 없으면 글자색의 8%.
+Color glassBorderColor(AGlass glass, ColorScheme cs) =>
+    glass.borderColor ?? cs.onSurface.withValues(alpha: 0.08);
+
 /// [glass] 값으로 그리는 유리 면 — [color] 에 `glass.opacity` 를 곱한 반투명 면 뒤로
 /// 지나가는 내용을 `glass.blurSigma` 만큼 흐린다. 흐림은 [borderRadius] 모양(없으면 사각형) 안에서만.
 ///

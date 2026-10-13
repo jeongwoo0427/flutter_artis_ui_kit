@@ -162,4 +162,27 @@ void main() {
     expect(find.byType(BackdropFilter), findsNothing);
     expect(_pillDecoration(tester).color, _theme.extension<AThemeData>()!.card);
   });
+
+  testWidgets('outline comes from the glass border', (tester) async {
+    await tester.pumpWidget(_app(selected: 0));
+    final cs = _theme.colorScheme;
+    final border = _pillDecoration(tester).border! as Border;
+    expect(border.top.color, cs.onSurface.withValues(alpha: 0.08));
+    expect(border.top.width, 1);
+
+    await tester.pumpWidget(
+      _app(
+        selected: 0,
+        glass: const AGlass(borderColor: Colors.amber, borderWidth: 2),
+      ),
+    );
+    final custom = _pillDecoration(tester).border! as Border;
+    expect(custom.top.color, Colors.amber);
+    expect(custom.top.width, 2);
+
+    await tester.pumpWidget(
+      _app(selected: 0, glass: const AGlass(borderWidth: 0)),
+    );
+    expect(_pillDecoration(tester).border, isNull);
+  });
 }

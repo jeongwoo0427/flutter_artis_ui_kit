@@ -13,6 +13,10 @@ import '../theme/a_theme_data.dart';
 /// 그렇지 않은 Scaffold 에서는 바 뒤에 흐릴 내용이 없으므로 **흐리지 않고 불투명하게** 그린다
 /// (보이는 것은 같고, 흐림 비용을 아낀다).
 ///
+/// 아래 테두리(하단 탭 알약과 같은 [AGlass] 테두리)는 늘 그리지 않는다 — Material [AppBar] 의
+/// scrolled-under 와 같은 방식으로 Scaffold 의 스크롤 알림을 듣고, 본문이 바 밑으로 스크롤됐을 때만
+/// 스스로 나타난다(맨 위로 돌아오면 사라진다).
+///
 /// ```dart
 /// Scaffold(
 ///   extendBodyBehindAppBar: true,
@@ -25,7 +29,7 @@ import '../theme/a_theme_data.dart';
 ///   ),
 /// )
 /// ```
-class AAppBar extends StatelessWidget implements PreferredSizeWidget {
+class AAppBar extends StatefulWidget implements PreferredSizeWidget {
   /// 인자는 같은 이름의 [AppBar] 인자와 같다.
   const AAppBar({
     super.key,
@@ -80,11 +84,54 @@ class AAppBar extends StatelessWidget implements PreferredSizeWidget {
       Size.fromHeight(kToolbarHeight + (bottom?.preferredSize.height ?? 0));
 
   @override
+  State<AAppBar> createState() => _AAppBarState();
+}
+
+class _AAppBarState extends State<AAppBar> {
+  ScrollNotificationObserverState? _observer;
+
+  /// 본문이 바 밑으로 스크롤돼 있는지 — Material [AppBar] 의 scrolled-under 와 같은 판정.
+  bool _scrolledUnder = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _observer?.removeListener(_handleScroll);
+    _observer = ScrollNotificationObserver.maybeOf(context);
+    _observer?.addListener(_handleScroll);
+  }
+
+  @override
+  void dispose() {
+    _observer?.removeListener(_handleScroll);
+    _observer = null;
+    super.dispose();
+  }
+
+  void _handleScroll(ScrollNotification notification) {
+    if (notification is! ScrollUpdateNotification ||
+        !defaultScrollNotificationPredicate(notification)) {
+      return;
+    }
+    final metrics = notification.metrics;
+    final scrolledUnder = switch (metrics.axisDirection) {
+      AxisDirection.down => metrics.extentBefore > 0,
+      AxisDirection.up => metrics.extentAfter > 0,
+      // 가로 스크롤은 상태를 바꾸지 않는다(2D 스크롤의 가로 알림 포함).
+      AxisDirection.left || AxisDirection.right => _scrolledUnder,
+    };
+    if (scrolledUnder != _scrolledUnder) {
+      setState(() => _scrolledUnder = scrolledUnder);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final a = AThemeData.of(context);
+    final glass = widget.glass ?? a.glass;
     final color =
-        backgroundColor ?? theme.appBarTheme.backgroundColor ?? a.page;
+        widget.backgroundColor ?? theme.appBarTheme.backgroundColor ?? a.page;
     // 본문이 바 뒤로 오지 않으면 유리를 끈다 — 페이지 위 반투명 페이지색은 불투명과 같아 보인다.
     final behind =
         Scaffold.maybeOf(context)?.widget.extendBodyBehindAppBar ?? true;
@@ -95,15 +142,15 @@ class AAppBar extends StatelessWidget implements PreferredSizeWidget {
         : Brightness.dark;
 
     return AppBar(
-      leading: leading,
-      automaticallyImplyLeading: automaticallyImplyLeading,
-      title: title,
-      actions: actions,
-      bottom: bottom,
-      centerTitle: centerTitle,
-      titleSpacing: titleSpacing,
-      leadingWidth: leadingWidth,
-      foregroundColor: foregroundColor,
+      leading: widget.leading,
+      automaticallyImplyLeading: widget.automaticallyImplyLeading,
+      title: widget.title,
+      actions: widget.actions,
+      bottom: widget.bottom,
+      centerTitle: widget.centerTitle,
+      titleSpacing: widget.titleSpacing,
+      leadingWidth: widget.leadingWidth,
+      foregroundColor: widget.foregroundColor,
       backgroundColor: Colors.transparent,
       systemOverlayStyle:
           theme.appBarTheme.systemOverlayStyle ??
@@ -116,8 +163,21 @@ class AAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
       flexibleSpace: GlassSurface(
         color: color,
-        glass: behind ? glass ?? a.glass : AGlass.none,
-        child: const SizedBox.expand(),
+        glass: behind ? glass : AGlass.none,
+        child: Align(
+          alignment: Alignment.bottomCenter,
+          child: AnimatedOpacity(
+            opacity: _scrolledUnder && glass.borderWidth > 0 ? 1 : 0,
+            duration: a.motion.medium,
+            child: SizedBox(
+              height: glass.borderWidth,
+              width: double.infinity,
+              child: ColoredBox(
+                color: glassBorderColor(glass, theme.colorScheme),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

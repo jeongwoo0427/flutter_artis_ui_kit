@@ -141,4 +141,62 @@ void main() {
     expect(find.byType(BackdropFilter), findsNothing);
     expect(_surfaceColor(tester), _theme.extension<AThemeData>()!.page);
   });
+
+  group('bottom border', () {
+    double borderOpacity(WidgetTester tester) => tester
+        .widget<AnimatedOpacity>(
+          find.descendant(
+            of: find.byType(AAppBar),
+            matching: find.byType(AnimatedOpacity),
+          ),
+        )
+        .opacity;
+
+    Widget scrolling({AGlass? glass}) => MaterialApp(
+      theme: _theme,
+      home: Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AAppBar(title: const Text('Bank'), glass: glass),
+        body: ListView(children: [for (var i = 0; i < 50; i++) Text('row $i')]),
+      ),
+    );
+
+    testWidgets('hidden at the top, shows once content scrolls under', (
+      tester,
+    ) async {
+      await tester.pumpWidget(scrolling());
+      expect(borderOpacity(tester), 0);
+
+      await tester.drag(find.byType(ListView), const Offset(0, -200));
+      await tester.pumpAndSettle();
+      expect(borderOpacity(tester), 1);
+
+      await tester.drag(find.byType(ListView), const Offset(0, 400));
+      await tester.pumpAndSettle();
+      expect(borderOpacity(tester), 0);
+    });
+
+    testWidgets('uses the glass border — same as the floating bar', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        scrolling(
+          glass: const AGlass(borderColor: Colors.amber, borderWidth: 2),
+        ),
+      );
+      final line = find.descendant(
+        of: find.byType(AnimatedOpacity),
+        matching: find.byType(ColoredBox),
+      );
+      expect(tester.widget<ColoredBox>(line).color, Colors.amber);
+      expect(tester.getSize(line).height, 2);
+    });
+
+    testWidgets('borderWidth 0 never shows a border', (tester) async {
+      await tester.pumpWidget(scrolling(glass: const AGlass(borderWidth: 0)));
+      await tester.drag(find.byType(ListView), const Offset(0, -200));
+      await tester.pumpAndSettle();
+      expect(borderOpacity(tester), 0);
+    });
+  });
 }

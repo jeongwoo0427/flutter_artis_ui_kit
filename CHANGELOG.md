@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.2.0
+
+- `AGlass` 에 테두리 — `borderColor`(기본: 글자색 8%) · `borderWidth`(기본 1, `0` 이면 없음). 하단 탭과 상단 바가 같은 값을 쓴다.
+- `AFloatingNavigationBar`: 알약 외곽선을 `AGlass` 테두리로(모양은 그대로).
+- `AAppBar`: 아래 테두리를 **스크롤했을 때만** — Material `AppBar` 의 scrolled-under 와 같은 방식(Scaffold 의 `ScrollNotificationObserver`, 깊이 0 세로 스크롤)으로 본문이 바 밑으로 들어가면 `motion.medium` 동안 나타나고, 맨 위로 오면 사라진다.
+
 ## 4.1.0
 
 - 유리 면 성능: 흐림을 `BackdropFilter.grouped` 로 — `AAdaptiveNavigation`(좁은 창)이 `BackdropGroup` 을 깔아, 탭 화면의 `AAppBar` 와 하단 탭이 뒤 내용을 **한 번만** 흐려 나눠 쓴다(Impeller). 두 바는 겹치지 않고 같은 `AGlass` 를 쓴다.
