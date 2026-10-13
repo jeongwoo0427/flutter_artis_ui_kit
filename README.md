@@ -4,7 +4,7 @@ Flutter Material 위에 얹는 **간결한 디자인 시스템**이다.
 톤(브랜드 색) 하나를 넘기면 앱 전체 테마가 만들어지고, 표준 위젯은 그 테마로 모양이 맞춰진다.
 표준에 없는 부품만 `A` 접두사 위젯으로 제공한다.
 
-> **상태: 0.1.0 — 구조 정리 단계.** 새 디자인 시스템(1.0.0)을 만드는 중이다.
+> **상태: 0.2.0 — 토큰 · 테마 빌더.** 컴포넌트는 1.0.0 에서 나온다.
 > 1.0 이전 위젯은 `legacy.dart` 로 옮겨 두었다(아래 "옛 위젯").
 
 ## 원칙
@@ -56,6 +56,22 @@ dependency_overrides:
   flutter_artis_ui_kit:
     path: ../flutter_artis_ui_kit
 ```
+
+## 테마
+
+```dart
+final tone = ATone.fromBrand(const Color(0xFF3182F6)); // 또는 ATone(...) 으로 직접
+
+MaterialApp(
+  theme: AThemeBuilder.light(tone: tone, fontFamily: 'YourFont'),
+  darkTheme: AThemeBuilder.dark(tone: tone, fontFamily: 'YourFont'),
+);
+```
+
+- 톤이 바꾸는 것은 강조색 계열뿐이다. 회색(`ANeutrals`)과 의미색(`ASemanticColors`)은 고정이고 필요하면 빌더 파라미터로 바꾼다.
+- 킷 토큰은 `AThemeData.of(context)` — `page` · `card` · `sunken` · `brand` · `semantic` · `radii` · `spacing` · `motion`.
+- 표준 위젯(`FilledButton` · `TextField` · `SearchBar` · `showModalBottomSheet` · `SnackBar` …)은 따로 스타일을 주지 않아도 킷 모양이 된다.
+- 앱 전용 색은 앱이 `ThemeExtension` 을 하나 더 만들어 `theme.copyWith(extensions: [...])` 로 붙인다.
 
 ## 옛 위젯
 
