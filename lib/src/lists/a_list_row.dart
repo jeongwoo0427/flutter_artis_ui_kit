@@ -76,37 +76,54 @@ class AListRow extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: _verticalPadding),
         child: Row(
-          spacing: a.spacing.md,
           children: [
-            ?leading,
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                spacing: a.spacing.xs,
-                children: [
-                  DefaultTextStyle.merge(
-                    style: t.titleSmall,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    child: title,
-                  ),
-                  if (subtitle != null)
-                    DefaultTextStyle.merge(
-                      style: t.bodySmall?.merge(tertiary),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      child: subtitle!,
+            // 앞 위젯이 생기거나(선택 모드의 체크 등) 바뀌면 폭이 부드럽게 늘고 줄어 뒤 내용이 밀려난다.
+            AnimatedSize(
+              duration: a.motion.medium,
+              curve: Curves.easeOutCubic,
+              alignment: AlignmentDirectional.centerStart,
+              child: leading == null
+                  ? const SizedBox.shrink()
+                  : Padding(
+                      padding: EdgeInsetsDirectional.only(end: a.spacing.md),
+                      child: leading,
                     ),
+            ),
+            Expanded(
+              child: Row(
+                spacing: a.spacing.md,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      spacing: a.spacing.xs,
+                      children: [
+                        DefaultTextStyle.merge(
+                          style: t.titleSmall,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          child: title,
+                        ),
+                        if (subtitle != null)
+                          DefaultTextStyle.merge(
+                            style: t.bodySmall?.merge(tertiary),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            child: subtitle!,
+                          ),
+                      ],
+                    ),
+                  ),
+                  if (trailing != null)
+                    DefaultTextStyle.merge(
+                      style: t.bodyMedium?.merge(tertiary),
+                      child: trailing!,
+                    ),
+                  if (showChevron) Icon(Icons.chevron_right, color: cs.outline),
                 ],
               ),
             ),
-            if (trailing != null)
-              DefaultTextStyle.merge(
-                style: t.bodyMedium?.merge(tertiary),
-                child: trailing!,
-              ),
-            if (showChevron) Icon(Icons.chevron_right, color: cs.outline),
           ],
         ),
       ),

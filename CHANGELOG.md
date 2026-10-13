@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.1.0
+
+- `AListRow`: 앞 위젯(`leading`)이 생기거나 바뀌면 폭이 `motion.medium` 동안 부드럽게 늘고 줄어 뒤 내용이 밀려난다(선택 모드의 체크가 순간이동하지 않게). `leading` 이 없으면 앞 간격도 없다.
+
 ## 3.0.0
 
 - **깨지는 변경:** `ABottomCta` → **`ABottomBar`**. 하단 버튼 바 하나로 합쳤다 — 면 색(`backgroundColor`, 기본 `card`), 위 경계(`edge`: `line` 기본 · `fade` · `none`),
