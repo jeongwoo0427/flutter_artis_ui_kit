@@ -24,7 +24,7 @@ class ATone {
   /// [primary] 와 [ink] 는 흰 바탕(또는 연한 강조 면) 대비 4.5:1 을 만족하도록 어둡게 맞춘다.
   factory ATone.fromBrand(Color brand) {
     final primary = darkenToContrast(brand, _white, 4.5);
-    final weak = Color.alphaBlend(brand.withValues(alpha: 0.11), _white);
+    final weak = Color.alphaBlend(brand.withValues(alpha: 0.16), _white);
     return ATone(
       brand: brand,
       primary: primary,

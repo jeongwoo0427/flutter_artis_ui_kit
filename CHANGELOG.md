@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.2.0
+
+- 밝은 테마의 연한 강조 면(`primaryContainer`)을 브랜드색 11% → **16%** 로 — 회색 페이지(`page`) 위에 올린 강조 카드가 페이지와 거의 같아 보이던 것. 톤과 무관하게 브랜드색에서 만들므로 어떤 톤이든 같은 만큼 진해진다.
+  `ATone.ink` 도 새 면 기준으로 4.5:1 을 맞춘다. 어두운 테마는 그대로(22%).
+  이 면을 쓰는 것: `AButton.tonal` · `AListRow(selected)` · `ABreadcrumb` 현재 칸 · `AOptionTile` · `ATag.primary` · `APickCard` 선택 · 세그먼트 버튼 선택 칸 · `NavigationRail` 표시.
+
 ## 3.1.1
 
 - `ATitleTabs`: 글자를 앱바 제목 스타일(`appBarTheme.titleTextStyle`)로, 높이를 글자 한 줄로 — 같은 자리에 평범한 제목 `Text` 를 둘 때와 제목 크기 · 부제 위치가 같다(예전엔 24 + 최소 48 높이라 제목을 바꿔 끼우면 앱바가 달라 보였다).

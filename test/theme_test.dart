@@ -19,7 +19,7 @@ void main() {
       test('${brand.toARGB32().toRadixString(16)} — 흰 글자 4.5:1', () {
         final tone = ATone.fromBrand(brand);
         expect(contrastRatio(tone.primary, _white), greaterThanOrEqualTo(4.5));
-        final weak = Color.alphaBlend(brand.withValues(alpha: 0.11), _white);
+        final weak = Color.alphaBlend(brand.withValues(alpha: 0.16), _white);
         expect(contrastRatio(tone.ink, weak), greaterThanOrEqualTo(4.5));
         expect(tone.brand, brand);
       });

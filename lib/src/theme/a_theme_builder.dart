@@ -52,7 +52,7 @@ abstract final class AThemeBuilder {
       primary: tone.primary,
       onPrimary: _white,
       primaryContainer: Color.alphaBlend(
-        tone.brand.withValues(alpha: isDark ? 0.22 : 0.11),
+        tone.brand.withValues(alpha: isDark ? 0.22 : 0.16),
         n.card,
       ),
       onPrimaryContainer: isDark
