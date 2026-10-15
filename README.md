@@ -84,7 +84,7 @@ MaterialApp(
 | 선택 | `AOptionTile`(idle · selected · positive · negative, `.numbered`) · `APickCard` |
 | 표시 | `ATag` · `AEmojiTile` |
 | 피드백 | `AEmptyState`(`.inline`) · `ASkeleton` |
-| 내비게이션 | `AFloatingNavigationBar` · `AAdaptiveNavigation` · `AAppBar` · `ATitleTabs` · `ABreadcrumb` |
+| 내비게이션 | `AFloatingNavigationBar` · `AFloatingNavigationScaffold` · `AAppBar` · `ATitleTabs` · `ABreadcrumb` |
 | 오버레이 | `showABottomSheet` · `ABottomSheetScaffold` · `showAActionSheet` · `ADialog` · `showAConfirmDialog` |
 | 바 | `ABottomBar`(+`ABottomBarEdge` 선 · 페이드 · 없음, 면 색) · `ASelectionBar`(`ABottomBar` 위의 아이콘 동작 + 주 버튼) |
 | 레이아웃 | `AWindowSize`(compact < 600 ≤ medium < 840 ≤ expanded) · `AContentWidth`(reading 640 · list 720 · wide 1040) |

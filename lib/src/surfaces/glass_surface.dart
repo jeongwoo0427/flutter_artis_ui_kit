@@ -13,7 +13,7 @@ Color glassBorderColor(AGlass glass, ColorScheme cs) =>
 ///
 /// 킷 내부용 — `AFloatingNavigationBar` · `AAppBar` 가 같은 모양으로 그리려고 나눠 쓴다.
 ///
-/// 흐림은 `BackdropFilter.grouped` 라 위에 [BackdropGroup] 이 있으면(`AAdaptiveNavigation`) 그 안의
+/// 흐림은 `BackdropFilter.grouped` 라 위에 [BackdropGroup] 이 있으면(`AFloatingNavigationScaffold`) 그 안의
 /// 유리 면들이 뒤 내용을 **한 번만** 흐려 나눠 쓴다(Impeller). 없으면 보통 `BackdropFilter` 와 같다.
 class GlassSurface extends StatelessWidget {
   /// [child] 뒤에 유리 면을 깐다.

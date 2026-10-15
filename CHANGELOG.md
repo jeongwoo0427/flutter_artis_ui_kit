@@ -1,5 +1,10 @@
 # Changelog
 
+## 6.0.0
+
+- **깨지는 변경:** `AAdaptiveNavigation` → **`AFloatingNavigationScaffold`**. 넓은 창(≥ 840)에서 `NavigationRail` 로 바꾸던 분기를 없앴다 — 폰 · 태블릿 모두 같은 떠 있는 알약 하단 탭.
+  인자(`destinations` · `selectedIndex` · `onDestinationSelected` · `body` · `navigationVisible`)와 유리 흐림 그룹(`BackdropGroup`)은 그대로다. 레일이 필요하면 표준 `NavigationRail` 을 직접 쓴다(킷 테마가 모양을 맞춘다).
+
 ## 5.0.0
 
 - **깨지는 변경:** `AGlass.opacity` → **`appBarOpacity`**(기본 0.70) · **`navigationBarOpacity`**(기본 0.56). 흐림 · 테두리는 두 바가 같고 불투명도만 바마다 — 상단 바는 조금 더 불투명하게, 하단 탭은 더 비치게(4.x 는 둘 다 0.64).

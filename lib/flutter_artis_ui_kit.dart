@@ -19,7 +19,7 @@ export 'src/theme/a_theme_data.dart';
 export 'src/layout/a_content_width.dart';
 export 'src/layout/a_window_size.dart';
 // navigation
-export 'src/navigation/a_adaptive_navigation.dart';
+export 'src/navigation/a_floating_navigation_scaffold.dart';
 export 'src/navigation/a_breadcrumb.dart';
 export 'src/navigation/a_floating_navigation_bar.dart';
 export 'src/navigation/a_title_tabs.dart';

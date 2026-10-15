@@ -16,7 +16,7 @@ Future<void> _pump(
       theme: AThemeBuilder.light(
         tone: ATone.fromBrand(const Color(0xFF3182F6)),
       ),
-      home: AAdaptiveNavigation(
+      home: AFloatingNavigationScaffold(
         destinations: const [
           NavigationDestination(icon: Icon(Icons.home_rounded), label: 'Home'),
           NavigationDestination(icon: Icon(Icons.person), label: 'Me'),
@@ -31,18 +31,15 @@ Future<void> _pump(
 }
 
 void main() {
-  testWidgets('compact width shows the floating bar', (tester) async {
-    await _pump(tester, 400);
-    expect(find.byType(AFloatingNavigationBar), findsOneWidget);
-    expect(find.byType(NavigationRail), findsNothing);
-    expect(find.text('body'), findsOneWidget);
-  });
-
-  testWidgets('expanded width shows a navigation rail', (tester) async {
-    await _pump(tester, 1000);
-    expect(find.byType(NavigationRail), findsOneWidget);
-    expect(find.byType(AFloatingNavigationBar), findsNothing);
-    expect(find.text('body'), findsOneWidget);
+  testWidgets('floating bar at every width — phone and tablet alike', (
+    tester,
+  ) async {
+    for (final width in [400.0, 1000.0, 1400.0]) {
+      await _pump(tester, width);
+      expect(find.byType(AFloatingNavigationBar), findsOneWidget);
+      expect(find.byType(NavigationRail), findsNothing);
+      expect(find.text('body'), findsOneWidget);
+    }
   });
 
   testWidgets('hidden bar slides down and ignores taps', (tester) async {
@@ -72,7 +69,7 @@ void main() {
         theme: AThemeBuilder.light(
           tone: ATone.fromBrand(const Color(0xFF3182F6)),
         ),
-        home: const AAdaptiveNavigation(
+        home: const AFloatingNavigationScaffold(
           destinations: [
             NavigationDestination(
               icon: Icon(Icons.home_rounded),
