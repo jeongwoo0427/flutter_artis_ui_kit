@@ -77,4 +77,58 @@ void main() {
       expect(data.radii.lg, 16);
     });
   });
+
+  group('brandFill — 밝은 브랜드는 채운 면을 브랜드 그대로', () {
+    const golden = Color(0xFFFFC800);
+
+    test('채운 면 = 브랜드, 그 위 글자 = 대비 큰 쪽(검정), 글자 강조색은 4.5:1', () {
+      final tone = ATone.fromBrand(golden, brandFill: true);
+      final theme = AThemeBuilder.light(tone: tone);
+      final a = theme.extension<AThemeData>()!;
+      expect(a.primaryFill, golden);
+      expect(contrastRatio(a.onPrimaryFill, a.primaryFill), greaterThan(7));
+      // 글자로 쓰는 primary 는 그대로 흰 바탕 4.5:1
+      expect(
+        contrastRatio(theme.colorScheme.primary, const Color(0xFFFFFFFF)),
+        greaterThanOrEqualTo(4.5),
+      );
+      final filled = theme.filledButtonTheme.style!;
+      expect(filled.backgroundColor!.resolve({}), golden);
+      expect(filled.foregroundColor!.resolve({}), a.onPrimaryFill);
+    });
+
+    test('다크에서는 브랜드 그대로가 글자 강조색 — 어두운 면에서 흐리지 않게', () {
+      final tone = ATone.fromBrand(golden, brandFill: true);
+      final dark = AThemeBuilder.dark(tone: tone);
+      expect(dark.colorScheme.primary, golden);
+      expect(
+        contrastRatio(dark.colorScheme.primary, ANeutrals.dark.card),
+        greaterThanOrEqualTo(4.5),
+      );
+      expect(dark.colorScheme.onPrimary, tone.onBrand);
+    });
+
+    test('기본(brandFill 없음)은 예전과 같다 — 채운 면 = primary + 흰 글자', () {
+      final tone = ATone.fromBrand(const Color(0xFF3182F6));
+      final theme = AThemeBuilder.light(tone: tone);
+      final a = theme.extension<AThemeData>()!;
+      expect(a.primaryFill, theme.colorScheme.primary);
+      expect(a.onPrimaryFill, const Color(0xFFFFFFFF));
+      expect(theme.filledButtonTheme.style!.backgroundColor, isNull);
+    });
+
+    test('containerAlpha 가 강조 면 진하기를 정한다(다크는 +0.06)', () {
+      final tone = ATone.fromBrand(golden, containerAlpha: 0.2);
+      final light = AThemeBuilder.light(tone: tone).colorScheme;
+      final card = ANeutrals.light.card;
+      expect(
+        light.primaryContainer,
+        Color.alphaBlend(golden.withValues(alpha: 0.2), card),
+      );
+      expect(
+        contrastRatio(tone.ink, light.primaryContainer),
+        greaterThanOrEqualTo(4.5),
+      );
+    });
+  });
 }

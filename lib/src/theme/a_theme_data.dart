@@ -17,6 +17,8 @@ class AThemeData extends ThemeExtension<AThemeData> {
     required this.brand,
     required this.textTertiary,
     required this.semantic,
+    required this.primaryFill,
+    required this.onPrimaryFill,
     this.radii = const ARadii(),
     this.spacing = const ASpacing(),
     this.motion = const AMotion(),
@@ -34,6 +36,8 @@ class AThemeData extends ThemeExtension<AThemeData> {
       brand: cs.primary,
       textTertiary: cs.outline,
       semantic: dark ? ASemanticColors.dark : ASemanticColors.light,
+      primaryFill: cs.primary,
+      onPrimaryFill: cs.onPrimary,
     );
   }
 
@@ -61,6 +65,13 @@ class AThemeData extends ThemeExtension<AThemeData> {
   /// 의미색.
   final ASemanticColors semantic;
 
+  /// 색이 채워진 강조 면 — 주 버튼 · 강조 카드 · 선택 채움. 보통 `primary`,
+  /// 밝은 브랜드(`ATone.brandFill`)면 브랜드 색 그대로. 글자로 쓰는 강조색은 `primary` 다.
+  final Color primaryFill;
+
+  /// [primaryFill] 위 글자 · 아이콘.
+  final Color onPrimaryFill;
+
   /// 모서리 반경.
   final ARadii radii;
 
@@ -81,6 +92,8 @@ class AThemeData extends ThemeExtension<AThemeData> {
     Color? brand,
     Color? textTertiary,
     ASemanticColors? semantic,
+    Color? primaryFill,
+    Color? onPrimaryFill,
     ARadii? radii,
     ASpacing? spacing,
     AMotion? motion,
@@ -93,6 +106,8 @@ class AThemeData extends ThemeExtension<AThemeData> {
       brand: brand ?? this.brand,
       textTertiary: textTertiary ?? this.textTertiary,
       semantic: semantic ?? this.semantic,
+      primaryFill: primaryFill ?? this.primaryFill,
+      onPrimaryFill: onPrimaryFill ?? this.onPrimaryFill,
       radii: radii ?? this.radii,
       spacing: spacing ?? this.spacing,
       motion: motion ?? this.motion,
@@ -111,6 +126,8 @@ class AThemeData extends ThemeExtension<AThemeData> {
       brand: Color.lerp(brand, other.brand, t)!,
       textTertiary: Color.lerp(textTertiary, other.textTertiary, t)!,
       semantic: ASemanticColors.lerp(semantic, other.semantic, t),
+      primaryFill: Color.lerp(primaryFill, other.primaryFill, t)!,
+      onPrimaryFill: Color.lerp(onPrimaryFill, other.onPrimaryFill, t)!,
       radii: t < 0.5 ? radii : other.radii,
       spacing: t < 0.5 ? spacing : other.spacing,
       motion: t < 0.5 ? motion : other.motion,

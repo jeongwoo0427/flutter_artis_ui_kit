@@ -135,4 +135,28 @@ void main() {
     expect(await pressedScale(disable: false), lessThan(1));
     expect(await pressedScale(disable: true), 1);
   });
+
+  testWidgets('brandFill tone — primary button is the brand with dark text', (
+    tester,
+  ) async {
+    const golden = Color(0xFFFFC800);
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AThemeBuilder.light(
+          tone: ATone.fromBrand(golden, brandFill: true),
+        ),
+        home: Scaffold(
+          body: Center(
+            child: AButton(onPressed: () {}, child: const Text('Go')),
+          ),
+        ),
+      ),
+    );
+    final button = tester.widget<ButtonStyleButton>(
+      find.byWidgetPredicate((w) => w is ButtonStyleButton),
+    );
+    expect(button.style!.backgroundColor!.resolve({}), golden);
+    final fg = button.style!.foregroundColor!.resolve({})!;
+    expect(contrastRatio(fg, golden), greaterThan(7));
+  });
 }

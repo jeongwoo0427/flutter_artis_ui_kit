@@ -167,11 +167,10 @@ class _NumberBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final cs = theme.colorScheme;
     final a = AThemeData.of(context);
     final fill = switch (state) {
       AOptionState.idle => null,
-      AOptionState.selected => cs.primary,
+      AOptionState.selected => a.primaryFill,
       AOptionState.positive => a.semantic.positive,
       AOptionState.negative => a.semantic.negative,
     };
@@ -189,7 +188,11 @@ class _NumberBadge extends StatelessWidget {
             '$number',
             style: theme.textTheme.labelLarge!.copyWith(
               fontSize: 14,
-              color: fill == null ? a.textTertiary : cs.onPrimary,
+              color: fill == null
+                  ? a.textTertiary
+                  : state == AOptionState.selected
+                  ? a.onPrimaryFill
+                  : Colors.white,
             ),
           ),
         ),

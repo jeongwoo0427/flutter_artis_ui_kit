@@ -1,5 +1,12 @@
 # Changelog
 
+## 6.1.0
+
+- **밝은 브랜드용 채운 면** — `ATone.fromBrand(brand, brandFill: true)`: 버튼처럼 색이 채워진 면을 어둡게 맞춘 `primary`(흰 글자 4.5:1) 대신 **브랜드 색 그대로** 칠하고, 그 위 글자는 `onBrand`(흰색 · 검정 중 대비가 큰 쪽). 노랑 브랜드에서 버튼이 겨자색이 되지 않는다.
+  글자 · 아이콘 강조로 쓰는 `ColorScheme.primary` 는 그대로(흰 바탕 4.5:1). 단 다크 테마에서는 브랜드 그대로(어두운 면에서 흐리지 않게) + `onPrimary` = `onBrand`.
+- `AThemeData.primaryFill` · `onPrimaryFill` — 채워진 강조 면과 그 위 글자. `AButton.primary` · `FilledButton`(테마) · `AOptionTile` 선택 번호가 이것을 쓴다. 앱의 강조 카드도 이것을 쓰면 된다.
+- `ATone.containerAlpha`(기본 0.16, 다크 +0.06) — 연한 강조 면(`primaryContainer`) 진하기를 톤마다 정한다. `ink` 도 이 면 기준으로 4.5:1.
+
 ## 6.0.0
 
 - **깨지는 변경:** `AAdaptiveNavigation` → **`AFloatingNavigationScaffold`**. 넓은 창(≥ 840)에서 `NavigationRail` 로 바꾸던 분기를 없앴다 — 폰 · 태블릿 모두 같은 떠 있는 알약 하단 탭.

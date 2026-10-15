@@ -138,7 +138,7 @@ class _AButtonState extends State<AButton> {
     final text = Theme.of(context).textTheme;
     final a = AThemeData.of(context);
     final (bg, fg) = switch (widget._variant) {
-      _Variant.primary => (cs.primary, cs.onPrimary),
+      _Variant.primary => (a.primaryFill, a.onPrimaryFill),
       _Variant.tonal => (cs.primaryContainer, cs.onPrimaryContainer),
       _Variant.neutral => (cs.secondaryContainer, cs.onSecondaryContainer),
       _Variant.danger => (cs.error, cs.onError),

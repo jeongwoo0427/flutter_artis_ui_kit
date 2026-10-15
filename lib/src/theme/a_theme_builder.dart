@@ -50,12 +50,17 @@ abstract final class AThemeBuilder {
     final isDark = brightness == Brightness.dark;
     const radii = ARadii();
 
+    // 색이 채워진 강조 면 — 밝은 브랜드면 브랜드 그대로 + 검정 글자(ATone.brandFill).
+    final fill = tone.brandFill ? tone.brand : tone.primary;
+    final onFill = tone.brandFill ? tone.onBrand : _white;
+
     final scheme = ColorScheme(
       brightness: brightness,
-      primary: tone.primary,
-      onPrimary: _white,
+      // 밝은 브랜드(brandFill)는 다크에서 브랜드 그대로가 글자로도 잘 읽힌다 — 어둡게 맞춘 primary 는 어두운 면에서 흐리다.
+      primary: isDark && tone.brandFill ? tone.brand : tone.primary,
+      onPrimary: isDark && tone.brandFill ? tone.onBrand : _white,
       primaryContainer: Color.alphaBlend(
-        tone.brand.withValues(alpha: isDark ? 0.22 : 0.16),
+        tone.brand.withValues(alpha: tone.containerAlpha + (isDark ? 0.06 : 0)),
         n.card,
       ),
       onPrimaryContainer: isDark
@@ -148,6 +153,16 @@ abstract final class AThemeBuilder {
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: ButtonStyle(
+          backgroundColor: tone.brandFill
+              ? WidgetStateProperty.resolveWith(
+                  (s) => s.contains(WidgetState.disabled) ? n.fillHigh : fill,
+                )
+              : null,
+          foregroundColor: tone.brandFill
+              ? WidgetStateProperty.resolveWith(
+                  (s) => s.contains(WidgetState.disabled) ? n.disabled : onFill,
+                )
+              : null,
           shape: buttonShape,
           minimumSize: buttonSize,
           textStyle: buttonText,
@@ -265,6 +280,8 @@ abstract final class AThemeBuilder {
           brand: tone.brand,
           textTertiary: n.textTertiary,
           semantic: semantic,
+          primaryFill: fill,
+          onPrimaryFill: onFill,
           radii: radii,
           glass: glass,
         ),
