@@ -35,6 +35,7 @@ export 'src/lists/a_stat_group.dart';
 // selection
 export 'src/selection/a_option_tile.dart';
 export 'src/selection/a_pick_card.dart';
+export 'src/selection/a_segmented_control.dart';
 // display
 export 'src/display/a_emoji_tile.dart';
 export 'src/display/a_tag.dart';

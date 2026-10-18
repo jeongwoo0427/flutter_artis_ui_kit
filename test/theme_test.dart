@@ -62,6 +62,18 @@ void main() {
       expect(style.backgroundColor!.resolve({}), Colors.transparent);
     });
 
+    test('스위치 — 흰 동그라미 · 외곽선 없음, 켜면 채운 강조색 · 끄면 가장 진한 회색 면', () {
+      final theme = AThemeBuilder.light(tone: tone);
+      final sw = theme.switchTheme;
+      final a = theme.extension<AThemeData>()!;
+      expect(sw.thumbColor!.resolve({}), const Color(0xFFFFFFFF));
+      expect(sw.trackColor!.resolve({WidgetState.selected}), a.primaryFill);
+      expect(sw.trackColor!.resolve({}), ANeutrals.light.fillHighest);
+      expect(sw.trackOutlineColor!.resolve({}), Colors.transparent);
+      // 꺼진 동그라미도 켜진 것과 같은 크기(M3 는 thumbIcon 이 있으면 줄이지 않는다).
+      expect(sw.thumbIcon, isNotNull);
+    });
+
     testWidgets('확장이 없는 테마에서도 AThemeData.of 가 동작한다', (tester) async {
       late AThemeData data;
       await tester.pumpWidget(

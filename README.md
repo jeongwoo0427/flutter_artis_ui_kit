@@ -81,7 +81,7 @@ MaterialApp(
 | 버튼 | `AButton` · `.tonal` · `.neutral` · `.danger` · `.text` — 크기 `AButtonSize.large/medium/small`, `isLoading`, `icon` |
 | 면 | `ACard`(탭 · 눌림 축소) · `ASectionCard`(제목 · 개수 · 링크) · `ASectionHeader`(page · group · field) |
 | 목록 | `AListRow` · `AKeyValueRow` · `AStatGroup` · `APaginatedListView` · `ALoadMoreIndicator` |
-| 선택 | `AOptionTile`(idle · selected · positive · negative, `.numbered`) · `APickCard` |
+| 선택 | `AOptionTile`(idle · selected · positive · negative, `.numbered`) · `APickCard` · `ASegmentedControl`(미끄러지는 조각 · 끌기 · 부제 · 비활성 칸) |
 | 표시 | `ATag` · `AEmojiTile` |
 | 피드백 | `AEmptyState`(`.inline`) · `ASkeleton` |
 | 내비게이션 | `AFloatingNavigationBar` · `AFloatingNavigationScaffold` · `AAppBar` · `ATitleTabs` · `ABreadcrumb` |

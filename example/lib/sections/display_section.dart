@@ -67,6 +67,10 @@ List<Widget> displaySection(BuildContext context) {
       label: const Text('Custom leading, no number'),
       onTap: () {},
     ),
+    label(
+      'ASegmentedControl — tap · drag the thumb · subtitle · disabled · Switch',
+    ),
+    const _SegmentedDemo(),
     label('APickCard — 2 columns'),
     Row(
       spacing: a.spacing.sm,
@@ -120,4 +124,73 @@ List<Widget> displaySection(BuildContext context) {
       ],
     ),
   ];
+}
+
+class _SegmentedDemo extends StatefulWidget {
+  const _SegmentedDemo();
+
+  @override
+  State<_SegmentedDemo> createState() => _SegmentedDemoState();
+}
+
+class _SegmentedDemoState extends State<_SegmentedDemo> {
+  var _kind = 0;
+  var _style = 0;
+  var _on = true;
+
+  @override
+  Widget build(BuildContext context) {
+    final a = AThemeData.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: a.spacing.sm,
+      children: [
+        ASegmentedControl<int>(
+          segments: const [
+            ASegment(
+              value: 0,
+              label: Text('Paper'),
+              subtitle: Text('A4 · all'),
+            ),
+            ASegment(
+              value: 1,
+              label: Text('Summary'),
+              subtitle: Text('One page'),
+            ),
+          ],
+          selected: _kind,
+          onChanged: (v) => setState(() => _kind = v),
+        ),
+        ASegmentedControl<int>(
+          segments: const [
+            ASegment(value: 0, label: Text('All')),
+            ASegment(value: 1, label: Text('Wrong')),
+            ASegment(value: 2, label: Text('Locked'), enabled: false),
+          ],
+          selected: _style,
+          onChanged: (v) => setState(() => _style = v),
+        ),
+        Row(
+          children: [
+            const Expanded(child: Text('Intrinsic width in a Row')),
+            ASegmentedControl<int>(
+              segments: const [
+                ASegment(value: 0, label: Text('Basic')),
+                ASegment(value: 1, label: Text('Exam')),
+              ],
+              selected: _style.clamp(0, 1),
+              onChanged: (v) => setState(() => _style = v),
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            const Expanded(child: Text('Switch (theme)')),
+            Switch(value: _on, onChanged: (v) => setState(() => _on = v)),
+            const Switch(value: false, onChanged: null),
+          ],
+        ),
+      ],
+    );
+  }
 }

@@ -265,6 +265,24 @@ abstract final class AThemeBuilder {
           ),
         ),
       ),
+      // 스위치 = 회색 홈 · 흰 동그라미, 켜면 채운 강조색(iOS 모양). 꺼진 홈은 가장 진한 회색 면(fillHighest) —
+      // 흰 카드와 회색 카드(sunken) 어느 위에서도 보이게(divider 는 회색 카드에 묻힌다). M3 의 외곽선 · 꺼졌을 때 작은 동그라미를 없앤다 —
+      // thumbIcon 이 있으면 M3 가 꺼진 동그라미도 켜진 것과 같은 크기로 그린다(아이콘은 비어 있다).
+      switchTheme: SwitchThemeData(
+        thumbColor: WidgetStateProperty.resolveWith(
+          (s) => s.contains(WidgetState.disabled)
+              ? _white.withValues(alpha: 0.6)
+              : _white,
+        ),
+        trackColor: WidgetStateProperty.resolveWith((s) {
+          final color = s.contains(WidgetState.selected) ? fill : n.fillHighest;
+          return s.contains(WidgetState.disabled)
+              ? color.withValues(alpha: 0.5)
+              : color;
+        }),
+        trackOutlineColor: const WidgetStatePropertyAll(Colors.transparent),
+        thumbIcon: const WidgetStatePropertyAll(Icon(null)),
+      ),
       tooltipTheme: TooltipThemeData(
         decoration: BoxDecoration(
           color: n.inverse,

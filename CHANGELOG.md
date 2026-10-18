@@ -1,5 +1,12 @@
 # Changelog
 
+## 6.2.0
+
+- **`ASegmentedControl`** — 둘 이상 중 하나를 고르는 세그먼트. 회색 홈(`sunken`) 위로 고른 칸의 조각(라이트 `card` · 다크 `surfaceContainerHighest`, 옅은 그림자)이 `motion.medium` 동안 미끄러진다.
+  칸을 누르면 옮겨 가고, **조각을 잡고 끌면 손가락을 따라오다가 놓은 칸에 붙는다**(다른 칸에서 시작한 끌기는 무시). 회색 면 위에선 `trackColor`(예: `surfaceContainerHigh`)로 홈을 진하게. `ASegment` 에 `subtitle`(칸 아래 작은 설명) · `enabled`(흐리게, 누르면 `onDisabledTap`).
+  칸 폭은 같다 — 폭이 정해진 곳은 나누고, `Row` 처럼 열린 곳은 가장 긴 칸에 맞춘다. 애니메이션 줄이기 설정을 따른다. 표준 `SegmentedButton` 테마는 그대로 둔다.
+- **스위치 테마** — `Switch` 를 회색 홈(`fillHighest` — 흰 카드 · 회색 카드 모두에서 보이게) · 흰 동그라미로, 켜면 채운 강조색(`primaryFill`). M3 외곽선과 꺼졌을 때 작아지는 동그라미를 없앴다(비활성은 흐리게).
+
 ## 6.1.0
 
 - **밝은 브랜드용 채운 면** — `ATone.fromBrand(brand, brandFill: true)`: 버튼처럼 색이 채워진 면을 어둡게 맞춘 `primary`(흰 글자 4.5:1) 대신 **브랜드 색 그대로** 칠하고, 그 위 글자는 `onBrand`(흰색 · 검정 중 대비가 큰 쪽). 노랑 브랜드에서 버튼이 겨자색이 되지 않는다.
