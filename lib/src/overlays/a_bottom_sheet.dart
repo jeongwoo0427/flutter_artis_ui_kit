@@ -159,6 +159,7 @@ class AActionSheetItem<T> {
     this.icon,
     this.destructive = false,
     this.subtitle,
+    this.selected = false,
   });
 
   /// 이름.
@@ -175,6 +176,9 @@ class AActionSheetItem<T> {
 
   /// 이름 아래 한 줄 설명.
   final String? subtitle;
+
+  /// 지금 고른 값 — 줄 오른쪽에 강조색 ✓ 를 단다(테마 · 정렬처럼 하나를 고르는 시트).
+  final bool selected;
 }
 
 /// 고를 수 있는 동작 목록을 시트로 띄우고, 누른 줄의 [AActionSheetItem.value] 를 돌려준다.
@@ -217,6 +221,7 @@ class _ActionRow<T> extends StatelessWidget {
 
     return Semantics(
       button: true,
+      selected: item.selected,
       child: InkWell(
         onTap: () => Navigator.of(context).pop(item.value),
         borderRadius: BorderRadius.circular(a.radii.md),
@@ -249,6 +254,10 @@ class _ActionRow<T> extends StatelessWidget {
                     ],
                   ),
                 ),
+                if (item.selected) ...[
+                  SizedBox(width: a.spacing.md),
+                  Icon(Icons.check_rounded, size: 20, color: cs.primary),
+                ],
               ],
             ),
           ),

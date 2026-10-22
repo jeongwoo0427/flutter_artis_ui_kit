@@ -147,6 +147,26 @@ void main() {
     expect(result, isNull);
   });
 
+  testWidgets('selected item shows a primary check', (tester) async {
+    await tester.pumpWidget(
+      _app((context) {
+        showAActionSheet<int>(
+          context,
+          items: const [
+            AActionSheetItem(label: 'Light', value: 0),
+            AActionSheetItem(label: 'Dark', value: 1, selected: true),
+          ],
+        );
+      }),
+    );
+    await tester.tap(find.text('open'));
+    await tester.pumpAndSettle();
+
+    final check = tester.widget<Icon>(find.byIcon(Icons.check_rounded));
+    expect(check.color, _theme.colorScheme.primary);
+    expect(find.byIcon(Icons.check_rounded), findsOneWidget);
+  });
+
   testWidgets('destructive item uses colorScheme.error', (tester) async {
     await tester.pumpWidget(
       _app((context) {

@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.3.0
+
+- `AActionSheetItem.selected` — 지금 고른 값이면 줄 오른쪽에 강조색(`colorScheme.primary`) ✓ 를 단다(접근성 `selected` 도 함께). 테마 · 정렬처럼 하나를 고르는 시트에서 지금 값을 보인다.
+
 ## 6.2.0
 
 - **`ASegmentedControl`** — 둘 이상 중 하나를 고르는 세그먼트. 회색 홈(`sunken`) 위로 고른 칸의 조각(라이트 `card` · 다크 `surfaceContainerHighest`, 옅은 그림자)이 `motion.medium` 동안 미끄러진다.
