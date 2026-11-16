@@ -13,9 +13,10 @@ import '../theme/a_theme_data.dart';
 /// 그렇지 않은 Scaffold 에서는 바 뒤에 흐릴 내용이 없으므로 **흐리지 않고 불투명하게** 그린다
 /// (보이는 것은 같고, 흐림 비용을 아낀다).
 ///
-/// 아래 테두리(하단 탭 알약과 같은 [AGlass] 테두리)는 늘 그리지 않는다 — Material [AppBar] 의
-/// scrolled-under 와 같은 방식으로 Scaffold 의 스크롤 알림을 듣고, 본문이 바 밑으로 스크롤됐을 때만
-/// 스스로 나타난다(맨 위로 돌아오면 사라진다).
+/// 유리와 아래 테두리(하단 탭 알약과 같은 [AGlass] 테두리)는 **본문이 바 밑으로 스크롤됐을 때만** 켜진다 —
+/// Material [AppBar] 의 scrolled-under 와 같은 방식으로 Scaffold 의 스크롤 알림을 듣는다(맨 위로 돌아오면 꺼진다).
+/// 맨 위에서는 바 뒤가 본문의 위 여백(페이지)이라 불투명한 페이지색과 똑같아 보이는데, 흐림을 켜 두면
+/// 바 바로 아래 내용(예: 검은 탭)의 색까지 끌어와 바 밑단이 번진다. 그래서 맨 위에서는 불투명하게 그리고 흐림 비용도 아낀다.
 ///
 /// ```dart
 /// Scaffold(
@@ -132,9 +133,11 @@ class _AAppBarState extends State<AAppBar> {
     final glass = widget.glass ?? a.glass;
     final color =
         widget.backgroundColor ?? theme.appBarTheme.backgroundColor ?? a.page;
-    // 본문이 바 뒤로 오지 않으면 유리를 끈다 — 페이지 위 반투명 페이지색은 불투명과 같아 보인다.
+    // 본문이 바 뒤로 오지 않거나 아직 바 밑으로 스크롤되지 않았으면 유리를 끈다 —
+    // 페이지 위 반투명 페이지색은 불투명과 같아 보이고, 흐림만 바 아래 내용을 끌어와 번진다.
     final behind =
         Scaffold.maybeOf(context)?.widget.extendBodyBehindAppBar ?? true;
+    final glassOn = behind && _scrolledUnder;
     // 바 자체는 투명이라 AppBar 가 상태 표시줄 글자색을 정하지 못한다 — 면 색 기준으로 정해 준다.
     final iconBrightness =
         ThemeData.estimateBrightnessForColor(color) == Brightness.dark
@@ -161,24 +164,31 @@ class _AAppBarState extends State<AAppBar> {
                 ? Brightness.light
                 : Brightness.dark,
           ),
-      flexibleSpace: GlassSurface(
-        color: color,
-        opacity: behind ? glass.appBarOpacity : 1,
-        glass: behind ? glass : AGlass.none,
-        child: Align(
-          alignment: Alignment.bottomCenter,
-          child: AnimatedOpacity(
-            opacity: _scrolledUnder && glass.borderWidth > 0 ? 1 : 0,
-            duration: a.motion.medium,
-            child: SizedBox(
-              height: glass.borderWidth,
-              width: double.infinity,
-              child: ColoredBox(
-                color: glassBorderColor(glass, theme.colorScheme),
+      // 테두리는 유리 면 밖에 둔다 — 유리를 켜고 끌 때 면 쪽 위젯 트리가 바뀌어도 테두리의 페이드가 끊기지 않게.
+      flexibleSpace: Stack(
+        fit: StackFit.expand,
+        children: [
+          GlassSurface(
+            color: color,
+            opacity: glassOn ? glass.appBarOpacity : 1,
+            glass: glassOn ? glass : AGlass.none,
+            child: const SizedBox.shrink(),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: AnimatedOpacity(
+              opacity: _scrolledUnder && glass.borderWidth > 0 ? 1 : 0,
+              duration: a.motion.medium,
+              child: SizedBox(
+                height: glass.borderWidth,
+                width: double.infinity,
+                child: ColoredBox(
+                  color: glassBorderColor(glass, theme.colorScheme),
+                ),
               ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }

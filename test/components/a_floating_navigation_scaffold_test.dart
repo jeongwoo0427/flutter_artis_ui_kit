@@ -81,11 +81,14 @@ void main() {
           body: Scaffold(
             extendBodyBehindAppBar: true,
             appBar: AAppBar(title: Text('Home')),
-            body: SizedBox.expand(),
+            body: _Rows(),
           ),
         ),
       ),
     );
+    // 상단 바는 본문이 바 밑으로 스크롤됐을 때만 흐린다.
+    await tester.drag(find.byType(ListView), const Offset(0, -200));
+    await tester.pumpAndSettle();
     final keys = tester
         .renderObjectList<RenderBackdropFilter>(find.byType(BackdropFilter))
         .map((r) => r.backdropKey)
@@ -94,4 +97,12 @@ void main() {
     expect(keys.first, isNotNull);
     expect(keys.toSet(), hasLength(1));
   });
+}
+
+class _Rows extends StatelessWidget {
+  const _Rows();
+
+  @override
+  Widget build(BuildContext context) =>
+      ListView(children: [for (var i = 0; i < 50; i++) Text('row $i')]);
 }

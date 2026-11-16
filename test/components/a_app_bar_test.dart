@@ -16,12 +16,17 @@ final _theme = AThemeBuilder.light(
 
 Widget _app(PreferredSizeWidget appBar, {ThemeData? theme}) => MaterialApp(
   theme: theme ?? _theme,
-  home: Scaffold(
-    extendBodyBehindAppBar: true,
-    appBar: appBar,
-    body: const SizedBox.expand(),
-  ),
+  home: Scaffold(extendBodyBehindAppBar: true, appBar: appBar, body: _rows()),
 );
+
+ListView _rows() =>
+    ListView(children: [for (var i = 0; i < 50; i++) Text('row $i')]);
+
+/// 본문을 바 밑으로 올린다 — 유리는 이때부터 켜진다.
+Future<void> _scrollUnder(WidgetTester tester) async {
+  await tester.drag(find.byType(ListView), const Offset(0, -200));
+  await tester.pumpAndSettle();
+}
 
 Color? _surfaceColor(WidgetTester tester) =>
     (tester
@@ -42,6 +47,7 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(_app(const AAppBar(title: Text('Bank'))));
+    await _scrollUnder(tester);
 
     expect(find.text('Bank'), findsOneWidget);
     final page = _theme.extension<AThemeData>()!.page;
@@ -57,6 +63,25 @@ void main() {
     );
   });
 
+  testWidgets('at the top: opaque without blur — no bleed from content below', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_app(const AAppBar(title: Text('Bank'))));
+    final page = _theme.extension<AThemeData>()!.page;
+    expect(find.byType(BackdropFilter), findsNothing);
+    expect(_surfaceColor(tester), page);
+
+    await _scrollUnder(tester);
+    expect(find.byType(BackdropFilter), findsOneWidget);
+    expect(_surfaceColor(tester), page.withValues(alpha: 0.7));
+
+    // 맨 위로 돌아오면 다시 불투명.
+    await tester.drag(find.byType(ListView), const Offset(0, 400));
+    await tester.pumpAndSettle();
+    expect(find.byType(BackdropFilter), findsNothing);
+    expect(_surfaceColor(tester), page);
+  });
+
   testWidgets('same glass as the bottom navigation', (tester) async {
     await tester.pumpWidget(
       MaterialApp(
@@ -64,6 +89,7 @@ void main() {
         home: Scaffold(
           extendBodyBehindAppBar: true,
           appBar: const AAppBar(title: Text('Bank')),
+          body: _rows(),
           bottomNavigationBar: AFloatingNavigationBar(
             destinations: const [
               NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
@@ -74,6 +100,7 @@ void main() {
         ),
       ),
     );
+    await _scrollUnder(tester);
     final filters = tester
         .widgetList<BackdropFilter>(find.byType(BackdropFilter))
         .map((f) => f.filter)
@@ -144,6 +171,7 @@ void main() {
     await tester.pumpWidget(
       _app(const AAppBar(title: Text('Bank'), glass: AGlass.none)),
     );
+    await _scrollUnder(tester);
     expect(find.byType(BackdropFilter), findsNothing);
     expect(_surfaceColor(tester), _theme.extension<AThemeData>()!.page);
   });
@@ -177,7 +205,7 @@ void main() {
       home: Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AAppBar(title: const Text('Bank'), glass: glass),
-        body: ListView(children: [for (var i = 0; i < 50; i++) Text('row $i')]),
+        body: _rows(),
       ),
     );
 
